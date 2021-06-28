@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "baratito_backend"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+fastapi = "^0.65.2"
+aiofiles = "^0.7.0"
+structlog = "^21.1.0"
+
+[tool.poetry.dev-dependencies]
+isort = "^5.9.1"
+black = "^21.6b0"
+flake8 = "^3.9.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
