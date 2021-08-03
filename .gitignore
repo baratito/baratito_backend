@@ -141,3 +141,4 @@ cython_debug/
 # custom
 postgress_data
 static
+redis-data

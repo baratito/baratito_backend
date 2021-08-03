@@ -8,7 +8,7 @@ services:
     volumes:
       - ./app:/app
       - ./static:/static
-    depends_on: 
+    depends_on:
       - db
 
   db:
@@ -18,11 +18,11 @@ services:
       POSTGRES_PASSWORD: "toor"
       PGDATA: "/data/postgres"
     volumes:
-        - ./postgress_data:/data/postgres
+      - ./postgress_data:/data/postgres
     ports:
       - "5432:5432"
     restart: unless-stopped
-  
+
   pgadmin:
     image: "dpage/pgadmin4:4.24"
     environment:
@@ -39,3 +39,14 @@ services:
       - "-c"
       - "/bin/echo 'db:5432:*:root:toor' > /tmp/pgpassfile && chmod 600 /tmp/pgpassfile && /entrypoint.sh"
     restart: unless-stopped
+
+  redis:
+    image: "redis:alpine"
+    command: redis-server --requirepass 420piedrabuena
+    ports:
+      - "6379:6379"
+    volumes:
+      - $PWD/redis-data:/var/lib/redis
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    restart: always
