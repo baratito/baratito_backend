@@ -10,7 +10,7 @@
         "**/.pytest_cache": true
     },
     "python.analysis.extraPaths": [
-        "src",
+        "app",
     ],
     "python.linting.mypyEnabled": false,
     "python.linting.enabled": true,
