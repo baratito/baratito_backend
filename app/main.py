@@ -1,27 +1,36 @@
+import sys
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from structlog import get_logger
 
-app = FastAPI()
-
-
-log = get_logger()
-origins = ["*"]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-app.mount("/static", StaticFiles(directory="/static"), name="static")
+from common.di.containers import ApplicationContainer
+from common.routes import get_routes
+from common.settings import API_PREFIX
+from market.application import usecases
 
 
-@app.get("/")
-@app.get("/")
-async def main():
-    log.info("testing structlog", out_of_the_box=True, effort=0)
-    return "Hi!"
+def setup() -> FastAPI:
+    application = ApplicationContainer()
+    application.wire(modules=[sys.modules[__name__], usecases])
+
+    app = FastAPI()
+
+    origins = ["*"]
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+    app.mount("/static", StaticFiles(directory="/static"), name="static")
+
+    app.include_router(get_routes(), prefix=API_PREFIX)
+
+    return app
+
+
+app = setup()

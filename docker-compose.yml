@@ -7,7 +7,15 @@ services:
       - "8080:80"
     volumes:
       - ./app:/app
+      - ./alembic:/alembic
+      - ./alembic.ini:/alembic.ini
       - ./static:/static
+    environment:
+      DB_USER: root
+      DB_PASS: toor
+      DB_HOST: "db"
+      DB_PORT: "5432"
+      DB_NAME: "baratito"
     depends_on:
       - db
 
@@ -24,7 +32,7 @@ services:
     restart: unless-stopped
 
   pgadmin:
-    image: "dpage/pgadmin4:4.24"
+    image: "dpage/pgadmin4:4.30"
     environment:
       PGADMIN_DEFAULT_EMAIL: admin
       PGADMIN_DEFAULT_PASSWORD: admin
@@ -39,6 +47,20 @@ services:
       - "-c"
       - "/bin/echo 'db:5432:*:root:toor' > /tmp/pgpassfile && chmod 600 /tmp/pgpassfile && /entrypoint.sh"
     restart: unless-stopped
+
+  redis_handler:
+    image: redis_handler
+    environment:
+      REDIS_HOST: "redis"
+      REDIS_PASSWORD: "420piedrabuena"
+      REDIS_PORT: "6379"
+      DB_USER: root
+      DB_PASS: toor
+      DB_HOST: "db"
+      DB_PORT: "5432"
+      DB_NAME: "baratito"
+    depends_on:
+      - redis
 
   redis:
     image: "redis:alpine"
