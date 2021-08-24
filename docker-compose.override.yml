@@ -1,0 +1,68 @@
+version: "3"
+
+services:
+  webserver:
+    ports:
+      - "8080:80"
+    environment:
+      DB_USER: root
+      DB_PASS: toor
+      DB_HOST: "db"
+      DB_PORT: "5432"
+      DB_NAME: "baratito"
+    depends_on:
+      - db
+
+  db:
+    image: "postgres:13"
+    environment:
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "toor"
+      PGDATA: "/data/postgres"
+    volumes:
+      - ./postgress_data:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  pgadmin:
+    image: "dpage/pgadmin4:4.30"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    volumes:
+      - ./pgadmin_server.json:/pgadmin4/servers.json
+    ports:
+      - "5433:80"
+    entrypoint:
+      - "/bin/sh"
+      - "-c"
+      - "/bin/echo 'db:5432:*:root:toor' > /tmp/pgpassfile && chmod 600 /tmp/pgpassfile && /entrypoint.sh"
+    restart: unless-stopped
+
+  redis_handler:
+    image: redis_handler
+    environment:
+      REDIS_HOST: "redis"
+      REDIS_PASSWORD: "420piedrabuena"
+      REDIS_PORT: "6379"
+      DB_USER: root
+      DB_PASS: toor
+      DB_HOST: "db"
+      DB_PORT: "5432"
+      DB_NAME: "baratito"
+    depends_on:
+      - redis
+
+  redis:
+    image: "redis:alpine"
+    command: redis-server --requirepass 420piedrabuena
+    ports:
+      - "6379:6379"
+    volumes:
+      - $PWD/redis-data:/var/lib/redis
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    restart: always
