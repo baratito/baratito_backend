@@ -4,7 +4,7 @@ from market.application.usecases import detail_product, list_products
 router = APIRouter()
 
 
-@router.get("/product", name="market:products")
+@router.get("/products", name="market:products")
 def get_products(offset: int = 0, limit: int = 100):
     """
     Get list of products
