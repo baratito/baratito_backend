@@ -10,8 +10,12 @@ services:
       DB_HOST: "db"
       DB_PORT: "5432"
       DB_NAME: "baratito"
+      GOOGLE_CLIENT_IDS: "42161830547-tib7uiqu7k0ss8veja6jm6npb4tlnf6g.apps.googleusercontent.com,42161830547-2tmeb3hsacdf5ri1eujvc9a2s105m629.apps.googleusercontent.com"
     depends_on:
       - db
+    networks: 
+      - db
+      
 
   db:
     image: "postgres:13"
@@ -25,6 +29,9 @@ services:
       - "5432:5432"
     restart: unless-stopped
 
+    networks: 
+      - db
+  
   pgadmin:
     image: "dpage/pgadmin4:4.30"
     environment:
@@ -41,6 +48,8 @@ services:
       - "-c"
       - "/bin/echo 'db:5432:*:root:toor' > /tmp/pgpassfile && chmod 600 /tmp/pgpassfile && /entrypoint.sh"
     restart: unless-stopped
+    networks: 
+      - db
 
   redis_handler:
     image: redis_handler
@@ -66,3 +75,6 @@ services:
     environment:
       - REDIS_REPLICATION_MODE=master
     restart: always
+
+networks:
+  db:

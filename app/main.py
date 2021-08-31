@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+from auth.application import usecases as auth_usecases
 from common.di.containers import ApplicationContainer
 from common.routes import get_routes
 from common.settings import API_PREFIX
@@ -12,8 +13,7 @@ from market.application import usecases
 
 def setup() -> FastAPI:
     application = ApplicationContainer()
-    application.wire(modules=[sys.modules[__name__], usecases])
-
+    application.wire(modules=[sys.modules[__name__], usecases, auth_usecases])
     app = FastAPI()
 
     origins = ["*"]

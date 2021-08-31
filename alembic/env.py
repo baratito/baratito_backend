@@ -18,9 +18,10 @@ fileConfig(config.config_file_name)
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 
-from app.market.persistence.models import Base
+from app.auth.persistence.models import Base as AuthBase
+from app.market.persistence.models import Base as MarketBase
 
-target_metadata = Base.metadata
+target_metadata = [MarketBase.metadata, AuthBase.metadata]
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
