@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from profile.application.usecases.create_profile import create_profile
 
 from auth.application.repositories.user_repository import UserNotFound
 from auth.application.usecases import create_user, get_user_by_email
@@ -23,10 +24,12 @@ def login_user(auth_code: str) -> dict:
     else:
         raise ValueError("Unable to validate social login")
 
+    print(idinfo)
     try:
         user = get_user_by_email(email=email)
     except UserNotFound:
         user = create_user(email=idinfo["email"])
+        create_profile(data=idinfo, user_id=user.id)
 
     access_token_expires = datetime.utcnow() + timedelta(days=ACCESS_TOKEN_EXPIRE_DAYS)
     refresh_token_expires = datetime.utcnow() + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)

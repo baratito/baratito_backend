@@ -1,4 +1,5 @@
 import sys
+from profile.application import usecases as profile_usecases
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,7 +14,7 @@ from market.application import usecases
 
 def setup() -> FastAPI:
     application = ApplicationContainer()
-    application.wire(modules=[sys.modules[__name__], usecases, auth_usecases])
+    application.wire(modules=[sys.modules[__name__], usecases, auth_usecases, profile_usecases])
     app = FastAPI()
 
     origins = ["*"]
