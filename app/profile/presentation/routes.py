@@ -8,6 +8,7 @@ router = APIRouter()
 
 
 @router.get("/profile", name="profile:profile")
+@router.get("/profile/", name="profile:profile", include_in_schema=False)
 def get_profile(user=Depends(get_current_user)):
     """
     Get profile detail

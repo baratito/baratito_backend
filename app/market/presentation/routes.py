@@ -5,6 +5,7 @@ router = APIRouter()
 
 
 @router.get("/products", name="market:products")
+@router.get("/products/", name="market:products", include_in_schema=False)
 def get_products(offset: int = 0, limit: int = 100):
     """
     Get list of products
@@ -14,6 +15,7 @@ def get_products(offset: int = 0, limit: int = 100):
 
 
 @router.get("/product/{id}", name="market:product")
+@router.get("/product/{id}/", name="market:product", include_in_schema=False)
 def get_product(id: int = 0):
     """
     Get detail product

@@ -9,6 +9,7 @@ router = APIRouter()
 
 
 @router.post("/login", name="auth:login")
+@router.post("/login/", name="auth:login", include_in_schema=False)
 async def login(request: Request):
     """
     Social login with Google.
@@ -22,6 +23,7 @@ async def login(request: Request):
 
 
 @router.post("/refresh_token", name="auth:refresh_token")
+@router.post("/refresh_token/", name="auth:refresh_token", include_in_schema=False)
 async def refresh_token(refresh_token: RefreshTokenIn):
     """
     Refresh access token
