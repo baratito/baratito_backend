@@ -62,8 +62,11 @@ services:
       DB_HOST: "db"
       DB_PORT: "5432"
       DB_NAME: "baratito"
+    restart: always
     depends_on:
       - redis
+    networks: 
+      - db
 
   redis:
     image: "redis:alpine"
@@ -75,6 +78,7 @@ services:
     environment:
       - REDIS_REPLICATION_MODE=master
     restart: always
-
+    networks: 
+      - db
 networks:
   db:
