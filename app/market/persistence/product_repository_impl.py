@@ -17,3 +17,6 @@ class ProductRepositoryImpl(ProductRepository):
 
     def get_by_id(self, id: int) -> Product:
         return self.db_session.query(Product).get(id)
+
+    def total(self) -> int:
+        return self.db_session.query(Product).count()

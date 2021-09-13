@@ -8,3 +8,11 @@ class ProductRepository(ABC):
     @abstractmethod
     def list_products(offset: int = 0, limit: int = 100) -> List[Product]:
         ...
+
+    @abstractmethod
+    def get_by_id(self, id: int):
+        ...
+
+    @abstractmethod
+    def total(self):
+        ...

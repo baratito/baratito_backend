@@ -10,7 +10,7 @@ from market.presentation import routes as products_routes
 def get_routes():
     router = APIRouter()
     router.include_router(
-        products_routes.router, tags=["product"], dependencies=[Depends(get_current_user)]
+        products_routes.router, tags=["product"], dependencies=[]
     )  # prefix="/shopping"
     router.include_router(auth_routes.router, tags=["auth"])
     router.include_router(profile_routes.router, tags=["profile"])

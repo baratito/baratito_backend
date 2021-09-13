@@ -1,3 +1,4 @@
+import structlog
 from auth.application.usecases import refresh_token_usecase
 from auth.application.usecases.login_user import login_user
 from auth.presentation.schemas import RefreshTokenIn
@@ -5,6 +6,7 @@ from fastapi import APIRouter, HTTPException
 from starlette.requests import Request
 from starlette.responses import HTMLResponse
 
+log = structlog.get_logger()
 router = APIRouter()
 
 
@@ -17,8 +19,11 @@ async def login(request: Request):
 
     body = await request.json()
     auth_code = body["token"]
-    response = login_user(auth_code=auth_code)
 
+    try:
+        response = login_user(auth_code=auth_code)
+    except ValueError as e:
+        return HTTPException(status_code=400, detail=str(e))
     return response
 
 

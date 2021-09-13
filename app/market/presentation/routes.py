@@ -1,5 +1,12 @@
+from common.persistence.get_db_session import get_db_session
 from fastapi import APIRouter
-from market.application.usecases import detail_product, list_products
+from market.application.usecases import (
+    detail_product,
+    list_establisment,
+    list_products,
+    total_establishment,
+)
+from market.application.usecases.total_product import total_products
 
 router = APIRouter()
 
@@ -11,7 +18,8 @@ def get_products(offset: int = 0, limit: int = 100):
     Get list of products
     """
     products = list_products(offset=offset, limit=limit)
-    return {"results": products}
+    total = total_products()
+    return {"total": total, "results": products}
 
 
 @router.get("/product/{id}", name="market:product")
@@ -22,3 +30,14 @@ def get_product(id: int = 0):
     """
     product = detail_product(id=id)
     return product
+
+
+@router.get("/establishments", name="market:establishments")
+@router.get("/establishments/", name="market:establishments", include_in_schema=False)
+def get_establishments(offset: int = 0, limit: int = 100):
+    """
+    Get list of establishments
+    """
+    establishments = list_establisment(offset=offset, limit=limit)
+    total = total_establishment()
+    return {"total": total, "results": establishments}

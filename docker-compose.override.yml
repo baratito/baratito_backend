@@ -13,12 +13,11 @@ services:
       GOOGLE_CLIENT_IDS: "42161830547-tib7uiqu7k0ss8veja6jm6npb4tlnf6g.apps.googleusercontent.com,42161830547-2tmeb3hsacdf5ri1eujvc9a2s105m629.apps.googleusercontent.com"
     depends_on:
       - db
-    networks: 
+    networks:
       - db
-      
 
   db:
-    image: "postgres:13"
+    image: "postgis/postgis"
     environment:
       POSTGRES_USER: "root"
       POSTGRES_PASSWORD: "toor"
@@ -29,9 +28,9 @@ services:
       - "5432:5432"
     restart: unless-stopped
 
-    networks: 
+    networks:
       - db
-  
+
   pgadmin:
     image: "dpage/pgadmin4:4.30"
     environment:
@@ -48,7 +47,7 @@ services:
       - "-c"
       - "/bin/echo 'db:5432:*:root:toor' > /tmp/pgpassfile && chmod 600 /tmp/pgpassfile && /entrypoint.sh"
     restart: unless-stopped
-    networks: 
+    networks:
       - db
 
   redis_handler:
@@ -65,7 +64,7 @@ services:
     restart: always
     depends_on:
       - redis
-    networks: 
+    networks:
       - db
 
   redis:
@@ -78,7 +77,7 @@ services:
     environment:
       - REDIS_REPLICATION_MODE=master
     restart: always
-    networks: 
+    networks:
       - db
 networks:
   db:

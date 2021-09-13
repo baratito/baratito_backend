@@ -24,3 +24,7 @@ class ApplicationContainer(containers.DeclarativeContainer):
     profile_repository_container = providers.Container(
         profile_containers.ProfileContainer, db_session=db_session_container.db_session
     )
+
+    establishment_repository_container = providers.Container(
+        market_containers.EstablishmentContainer, db_session=db_session_container.db_session
+    )
