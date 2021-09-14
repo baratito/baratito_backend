@@ -13,11 +13,11 @@ router = APIRouter()
 
 @router.get("/products", name="market:products")
 @router.get("/products/", name="market:products", include_in_schema=False)
-def get_products(offset: int = 0, limit: int = 100):
+def get_products(offset: int = 0, limit: int = 100, q: str = None):
     """
     Get list of products
     """
-    products = list_products(offset=offset, limit=limit)
+    products = list_products(offset=offset, limit=limit, q=q)
     total = total_products()
     return {"total": total, "results": products}
 
