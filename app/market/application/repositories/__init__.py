@@ -1,1 +1,3 @@
+from .category_repository import CategoryRepository
+from .establishment_repository import EstablishmentRepository
 from .product_repository import ProductRepository

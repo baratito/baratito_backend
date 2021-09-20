@@ -1,10 +1,10 @@
 import datetime
 
-import geoalchemy2
 from common.persistence.config import Base
-from geoalchemy2 import Geometry
 from geoalchemy2.types import Geography
 from sqlalchemy import Column, DateTime, Float, String, UniqueConstraint
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import BIGINT
 
 
@@ -33,3 +33,12 @@ class Establishment(Base):
     brand = Column(String)
     external_id = Column(String, unique=True)
     location = Column(Geography("POINT", srid=4326))
+
+
+class Category(Base):
+    __tablename__ = "category"
+    id = Column(BIGINT, primary_key=True, index=True)
+    name = Column(String)
+    external_id = Column(String, unique=True)
+    parent_id = Column(BIGINT, ForeignKey("category.id"), index=True)
+    parent = relationship(lambda: Category, remote_side=id, backref="sub_categories")
