@@ -45,7 +45,11 @@ def get_establishments(offset: int = 0, limit: int = 100):
 
 
 @router.get("/categories", name="market:categories")
-@router.get("/categories/", name="market:categories", include_in_schema=False)
+@router.get(
+    "/categories/",
+    name="market:categories",
+    include_in_schema=False,
+)
 def get_categories():
     """
     Get list of categories
