@@ -31,8 +31,8 @@ def upgrade():
         sa.Column("external_id", sa.String(), nullable=True),
         sa.Column(
             "location",
-            geoalchemy2.types.Geometry(
-                geometry_type="POINT", from_text="ST_GeomFromEWKT", name="geometry"
+            geoalchemy2.types.Geography(
+                geometry_type="POINT", srid=4326, from_text="ST_GeogFromText", name="geography"
             ),
             nullable=True,
         ),

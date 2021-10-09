@@ -42,3 +42,13 @@ class Category(Base):
     external_id = Column(String, unique=True)
     parent_id = Column(BIGINT, ForeignKey("category.id"), index=True)
     parent = relationship(lambda: Category, remote_side=id, backref="sub_categories")
+
+
+class CategoryProduct(Base):
+    __tablename__ = "category_product"
+    __table_args__ = (UniqueConstraint("product_id", "category_id"),)
+    id = Column(BIGINT, primary_key=True, index=True)
+    product_id = Column(BIGINT, ForeignKey("product.id"), index=True)
+    product = relationship("Product", backref="categories")
+    category_id = Column(BIGINT, ForeignKey("category.id"), index=True)
+    category = relationship("Category", backref="products")

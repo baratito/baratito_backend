@@ -14,5 +14,6 @@ def list_products(
     offset: int = 0,
     limit: int = 100,
     q: str = None,
+    category: int = None,
 ) -> List[Product]:
-    return product_repo.list_products(offset=offset, limit=limit, q=q)
+    return product_repo.list_products(offset=offset, limit=limit, q=q, category=category)

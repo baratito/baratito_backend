@@ -14,11 +14,11 @@ router = APIRouter()
 
 @router.get("/products", name="market:products")
 @router.get("/products/", name="market:products", include_in_schema=False)
-def get_products(offset: int = 0, limit: int = 100, q: str = None):
+def get_products(offset: int = 0, limit: int = 100, q: str = None, category: int = None):
     """
     Get list of products
     """
-    products = list_products(offset=offset, limit=limit, q=q)
+    products = list_products(offset=offset, limit=limit, q=q, category=category)
     total = total_products()
     return {"total": total, "results": products}
 
@@ -56,13 +56,3 @@ def get_categories():
     """
     categories = list_category()
     return {"results": categories}
-
-
-@router.get("/categories/test", name="market:test")
-@router.get("/categories/test", name="market:test", include_in_schema=False)
-def get_test():
-    """
-    Get list of categories
-    """
-    create_categories()
-    return {"results": "categories"}
