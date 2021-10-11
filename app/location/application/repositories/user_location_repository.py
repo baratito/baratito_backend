@@ -11,3 +11,11 @@ class UserLocationRepository(ABC):
     @abstractclassmethod
     def create(self, user_location: UserLocation):
         ...
+
+    @abstractclassmethod
+    def get_by_id(self, id: int):
+        ...
+
+    @abstractclassmethod
+    def enable_for_user(self, id: int, user_id: int):
+        ...

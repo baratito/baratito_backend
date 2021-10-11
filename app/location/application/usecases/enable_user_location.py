@@ -5,17 +5,24 @@ from location.application.repositories import UserLocationRepository
 from location.domain import UserLocation
 
 
+class UserLocationForbidden(Exception):
+    ...
+
+
 @inject
-def create_user_location(
+def enable_user_location(
     user_location_repository: UserLocationRepository = Provide[
         ApplicationContainer.user_location_repository_container.user_location_respository
     ],
-    user_location: UserLocation = None,
+    id: int = None,
     user: User = None,
 ):
-    locations = user_location_repository.filter(user_id=user.id)
-    if len(locations) == 0:
-        user_location.enable = True
+    user_location = user_location_repository.get_by_id(id=id)
 
-    user_location = user_location_repository.create(user_location)
+    if (user_location is not None and user_location.user_id != user.id) or user_location is None:
+        raise UserLocationForbidden
+
+    user_location_repository.enable_for_user(user_id=user.id, id=id)
+
+    user_location.enable = True
     return user_location
