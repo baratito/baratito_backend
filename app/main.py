@@ -9,12 +9,21 @@ from auth.application import usecases as auth_usecases
 from common.di.containers import ApplicationContainer
 from common.routes import get_routes
 from common.settings import API_PREFIX
+from location.application import usecases as location_usecases
 from market.application import usecases
 
 
 def setup() -> FastAPI:
     application = ApplicationContainer()
-    application.wire(modules=[sys.modules[__name__], usecases, auth_usecases, profile_usecases])
+    application.wire(
+        modules=[
+            sys.modules[__name__],
+            usecases,
+            auth_usecases,
+            profile_usecases,
+            location_usecases,
+        ]
+    )
     app = FastAPI()
 
     origins = ["*"]

@@ -19,6 +19,7 @@ fileConfig(config.config_file_name)
 # target_metadata = mymodel.Base.metadata
 
 from app.auth.persistence.models import Base as AuthBase
+from app.location.persistence.models import Base as LocationBase
 from app.market.persistence.models import Base as MarketBase
 from app.profile.persistence.models import Base as ProfileBase
 

@@ -4,6 +4,7 @@ from auth.presentation import routes as auth_routes
 from auth.presentation.utils import get_current_user
 from fastapi.param_functions import Depends
 from fastapi.routing import APIRouter
+from location.presentation import routes as location_routes
 from market.presentation import routes as products_routes
 
 
@@ -14,4 +15,5 @@ def get_routes():
     )  # prefix="/shopping"
     router.include_router(auth_routes.router, tags=["auth"])
     router.include_router(profile_routes.router, tags=["profile"])
+    router.include_router(location_routes.router, tags=["location"])
     return router
