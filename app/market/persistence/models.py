@@ -17,6 +17,7 @@ class Product(Base):
     max_price = Column(Float)
     min_price = Column(Float)
     external_id = Column(String, unique=True)
+    photo = Column(String)
     # created_date = Column(DateTime, default=datetime.datetime.utcnow)
     # update_date = Column(DateTime, default=datetime.datetime.utcnow)
 

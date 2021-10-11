@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 from pydantic.fields import Field
 
@@ -7,4 +9,5 @@ class Product(BaseModel):
     name: str
     presentation: str
     brand: str
-    external_id: str
+    photo: Optional[str] = None
+    category: Optional[int] = None
