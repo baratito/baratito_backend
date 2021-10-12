@@ -22,6 +22,7 @@ from app.auth.persistence.models import Base as AuthBase
 from app.location.persistence.models import Base as LocationBase
 from app.market.persistence.models import Base as MarketBase
 from app.profile.persistence.models import Base as ProfileBase
+from app.shopping.persistence.models import Base as ShoppingBase
 
 target_metadata = [ProfileBase.metadata]
 
