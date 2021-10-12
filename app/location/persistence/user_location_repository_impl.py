@@ -21,6 +21,7 @@ class UserLocationRepositoryImpl(UserLocationRepository):
             city=location_db.city,
             country=location_db.country,
             user_id=location_db.user_id,
+            name=location_db.name,
         )
         return location
 
@@ -63,3 +64,13 @@ class UserLocationRepositoryImpl(UserLocationRepository):
             {"enable": True}
         )
         self.db_session.commit()
+
+    def edit(self, id: int, user_id, new_user_location):
+        update_fields = {
+            key: getattr(new_user_location, key)
+            for key in new_user_location.__fields__
+            if getattr(new_user_location, key) is not None
+        }
+        self.db_session.query(UserLocation).filter_by(user_id=user_id, id=id).update(update_fields)
+        self.db_session.commit()
+        return self.get_by_id(id)

@@ -2,11 +2,8 @@ from auth.domain import User
 from common.di.containers import ApplicationContainer
 from dependency_injector.wiring import Provide, inject
 from location.application.repositories import UserLocationRepository
+from location.application.usecases.get_user_location import get_user_location
 from location.domain import UserLocation
-
-
-class UserLocationForbidden(Exception):
-    ...
 
 
 @inject
@@ -17,10 +14,7 @@ def enable_user_location(
     id: int = None,
     user: User = None,
 ):
-    user_location = user_location_repository.get_by_id(id=id)
-
-    if (user_location is not None and user_location.user_id != user.id) or user_location is None:
-        raise UserLocationForbidden
+    user_location = get_user_location(id=id, user=user)
 
     user_location_repository.enable_for_user(user_id=user.id, id=id)
 
