@@ -1,7 +1,6 @@
 from shopping.application.repositories.list_repository import ListRepository
 from shopping.domain import List as ListDomain
 from sqlalchemy.orm import Session
-from sqlalchemy.sql.functions import user
 
 from .models import List
 
@@ -29,3 +28,12 @@ class ListRepositoryImpl(ListRepository):
         self.db_session.commit()
         list_obj = self._to_domain(list_db=list_db)
         return list_db
+
+    def list(self, user_id: int):
+        lists_db = self.db_session.query(List).filter_by(user_id=user_id)
+        lists = []
+
+        for list_obj in lists_db:
+            lists.append(self._to_domain(list_db=list_obj))
+
+        return lists
