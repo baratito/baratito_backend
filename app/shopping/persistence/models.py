@@ -1,7 +1,7 @@
 import datetime
 
 from common.persistence.config import Base
-from sqlalchemy import BIGINT, Column, DateTime, String
+from sqlalchemy import BIGINT, Column, DateTime, Integer, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 
@@ -15,3 +15,16 @@ class List(Base):
 
     user_id = Column(BIGINT, ForeignKey("user.id"))
     user = relationship("User", backref="lists")
+
+
+class ListItem(Base):
+    __tablename__ = "list_item"
+    id = Column(BIGINT, primary_key=True, index=True)
+    quantity = Column(Integer)
+    created_date = Column(DateTime, default=datetime.datetime.utcnow)
+
+    product_id = Column(BIGINT, ForeignKey("product.id"))
+    product = relationship("Product", backref="list_items")
+
+    list_id = Column(BIGINT, ForeignKey("list.id"))
+    list_obj = relationship("List", backref="list_items")

@@ -4,9 +4,9 @@ from pydantic import BaseModel
 from pydantic.fields import Field
 
 
-class Item(BaseModel):
+class ListItem(BaseModel):
     id: int = Field(default=0)
     product_id: int
     list_id: int
     quantity: int
-    creation_date: str
+    created_date: str

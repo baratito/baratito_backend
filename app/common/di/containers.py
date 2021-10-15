@@ -5,6 +5,7 @@ from common.persistence import get_db_session
 from dependency_injector import containers, providers
 from location.di import containers as location_containers
 from market.di import containers as market_containers
+from shopping.di import containers as shopping_containers
 
 
 class DBSessionContainer(containers.DeclarativeContainer):
@@ -36,4 +37,8 @@ class ApplicationContainer(containers.DeclarativeContainer):
 
     user_location_repository_container = providers.Container(
         location_containers.UserLocationContainer, db_session=db_session_container.db_session
+    )
+
+    list_repository_container = providers.Container(
+        shopping_containers.ListContainer, db_session=db_session_container.db_session
     )

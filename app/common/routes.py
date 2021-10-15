@@ -6,6 +6,7 @@ from fastapi.param_functions import Depends
 from fastapi.routing import APIRouter
 from location.presentation import routes as location_routes
 from market.presentation import routes as products_routes
+from shopping.presentation import routes as shopping_routes
 
 
 def get_routes():
@@ -16,4 +17,5 @@ def get_routes():
     router.include_router(auth_routes.router, tags=["auth"])
     router.include_router(profile_routes.router, tags=["profile"])
     router.include_router(location_routes.router, tags=["location"])
+    router.include_router(shopping_routes.router, tags=["shopping"])
     return router

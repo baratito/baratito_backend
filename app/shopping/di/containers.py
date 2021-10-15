@@ -1,6 +1,7 @@
 from dependency_injector import containers, providers
+from shopping.persistence.list_repository_impl import ListRepositoryImpl
 
 
-class Container(containers.DeclarativeContainer):
+class ListContainer(containers.DeclarativeContainer):
     db_session = providers.Dependency()
-    product_respository = providers.Factory(..., db_session=db_session)
+    list_respository = providers.Factory(ListRepositoryImpl, db_session=db_session)

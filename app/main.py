@@ -11,6 +11,7 @@ from common.routes import get_routes
 from common.settings import API_PREFIX
 from location.application import usecases as location_usecases
 from market.application import usecases
+from shopping.application import usecases as shopping_usecases
 
 
 def setup() -> FastAPI:
@@ -22,6 +23,7 @@ def setup() -> FastAPI:
             auth_usecases,
             profile_usecases,
             location_usecases,
+            shopping_usecases,
         ]
     )
     app = FastAPI()
