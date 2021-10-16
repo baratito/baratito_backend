@@ -11,5 +11,7 @@ def total_products(
     product_repo: ProductRepository = Provide[
         ApplicationContainer.product_repository_container.product_respository
     ],
+    q: str = None,
+    category: int = None,
 ) -> int:
-    return product_repo.total()
+    return product_repo.total(q=q, category=category)

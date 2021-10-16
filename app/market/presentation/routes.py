@@ -19,7 +19,7 @@ def get_products(offset: int = 0, limit: int = 100, q: str = None, category: int
     Get list of products
     """
     products = list_products(offset=offset, limit=limit, q=q, category=category)
-    total = total_products()
+    total = total_products(q=q, category=category)
     return {"total": total, "results": products}
 
 

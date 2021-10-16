@@ -47,5 +47,13 @@ class ProductRepositoryImpl(ProductRepository):
         product = self._to_domain(product_db)
         return product
 
-    def total(self) -> int:
-        return self.db_session.query(Product).count()
+    def total(self, q: str = None, category: int = None) -> int:
+        query = self.db_session.query(Product)
+
+        if q is not None:
+            query = query.filter(Product.name.ilike(f"%{q}%"))
+
+        if category is not None:
+            query = query.join(CategoryProduct).filter_by(category_id=category)
+
+        return query.count()
