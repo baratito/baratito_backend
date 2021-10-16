@@ -10,3 +10,4 @@ class ListItem(BaseModel):
     list_id: int
     quantity: int
     created_date: str
+    id_uuid: str

@@ -24,7 +24,6 @@ def login_user(auth_code: str) -> dict:
     else:
         raise ValueError("Unable to validate social login")
 
-    print(idinfo)
     try:
         user = get_user_by_email(email=email)
     except UserNotFound:
