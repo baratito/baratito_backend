@@ -53,3 +53,17 @@ class CategoryProduct(Base):
     product = relationship("Product", backref="categories")
     category_id = Column(BIGINT, ForeignKey("category.id"), index=True)
     category = relationship("Category", backref="products")
+
+
+class ProductPrice(Base):
+    __tablename__ = "product_price"
+
+    id = Column(BIGINT, primary_key=True, index=True)
+    price = Column(Float)
+    created_date = Column(DateTime, default=datetime.datetime.utcnow)
+
+    product_id = Column(BIGINT, ForeignKey("product.id"), index=True)
+    product = relationship("Product", backref="prices")
+
+    establishment_id = Column(BIGINT, ForeignKey("establishment.id"), index=True)
+    establishment = relationship("Establishment", backref="prices")
