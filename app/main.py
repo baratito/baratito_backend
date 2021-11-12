@@ -11,6 +11,7 @@ from common.routes import get_routes
 from common.settings import API_PREFIX
 from location.application import usecases as location_usecases
 from market.application import usecases
+from middleware import Chartset
 from shopping.application import usecases as shopping_usecases
 
 
@@ -38,8 +39,8 @@ def setup() -> FastAPI:
         allow_headers=["*"],
     )
 
+    app.add_middleware(Chartset)
     app.mount("/static", StaticFiles(directory="/static"), name="static")
-
     app.include_router(get_routes(), prefix=API_PREFIX)
 
     return app

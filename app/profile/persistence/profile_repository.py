@@ -1,4 +1,5 @@
-from profile.application.repositories.profile_repository import ProfileRepository
+from profile.application.repositories.profile_repository import \
+    ProfileRepository
 
 from sqlalchemy.orm import Session
 

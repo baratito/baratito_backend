@@ -1,10 +1,11 @@
 import structlog
-from auth.application.usecases import refresh_token_usecase
-from auth.application.usecases.login_user import login_user
-from auth.presentation.schemas import RefreshTokenIn
 from fastapi import APIRouter, HTTPException
 from starlette.requests import Request
 from starlette.responses import HTMLResponse
+
+from auth.application.usecases import refresh_token_usecase
+from auth.application.usecases.login_user import login_user
+from auth.presentation.schemas import RefreshTokenIn
 
 log = structlog.get_logger()
 router = APIRouter()

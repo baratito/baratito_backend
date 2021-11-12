@@ -1,6 +1,7 @@
+from dependency_injector.wiring import Provide, inject
+
 from auth.domain import User
 from common.di.containers import ApplicationContainer
-from dependency_injector.wiring import Provide, inject
 from location.application.repositories import UserLocationRepository
 from location.domain import UserLocation
 
@@ -16,6 +17,9 @@ def create_user_location(
     locations = user_location_repository.filter(user_id=user.id)
     if len(locations) == 0:
         user_location.enable = True
+
+    if user_location.enable:
+        user_location_repository.disable_all_user_location(user_id=user.id)
 
     user_location = user_location_repository.create(user_location)
     return user_location

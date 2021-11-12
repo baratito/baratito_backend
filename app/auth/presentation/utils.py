@@ -1,9 +1,10 @@
-from auth.application.repositories.user_repository import UserNotFound
-from auth.application.usecases import create_token, get_user_by_email
-from common.settings import ALGORITHM, SECRET_KEY
 from fastapi import Depends, HTTPException, status
 from fastapi.security.oauth2 import OAuth2PasswordBearer
 from jose import JWTError, jwt
+
+from auth.application.repositories.user_repository import UserNotFound
+from auth.application.usecases import create_token, get_user_by_email
+from common.settings import ALGORITHM, SECRET_KEY
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 

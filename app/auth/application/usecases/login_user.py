@@ -1,18 +1,18 @@
 from datetime import datetime, timedelta
 from profile.application.usecases.create_profile import create_profile
 
-from auth.application.repositories.user_repository import UserNotFound
-from auth.application.usecases import create_user, get_user_by_email
-from auth.application.usecases.create_token import create_token
-from common.settings import ACCESS_TOKEN_EXPIRE_DAYS, GOOGLE_CLIENT_IDS, REFRESH_TOKEN_EXPIRE_DAYS
 from fastapi.encoders import jsonable_encoder
 from google.auth.transport import requests
 from google.oauth2 import id_token
 
+from auth.application.repositories.user_repository import UserNotFound
+from auth.application.usecases import create_user, get_user_by_email
+from auth.application.usecases.create_token import create_token
+from common.settings import ACCESS_TOKEN_EXPIRE_DAYS, GOOGLE_CLIENT_IDS, REFRESH_TOKEN_EXPIRE_DAYS
+
 
 def login_user(auth_code: str) -> dict:
     idinfo = id_token.verify_oauth2_token(auth_code, requests.Request())
-
     if idinfo["aud"] not in GOOGLE_CLIENT_IDS:
         raise ValueError("Could not verify audience.")
 

@@ -1,5 +1,7 @@
 from dependency_injector import containers, providers
-from location.persistence.user_location_repository_impl import UserLocationRepositoryImpl
+
+from location.persistence.user_location_repository_impl import \
+    UserLocationRepositoryImpl
 
 
 class UserLocationContainer(containers.DeclarativeContainer):

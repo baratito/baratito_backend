@@ -1,8 +1,10 @@
-from profile.application.repositories.profile_repository import ProfileRepository
+from profile.application.repositories.profile_repository import \
+    ProfileRepository
 from profile.domain import Profile
 
-from common.di.containers import ApplicationContainer
 from dependency_injector.wiring import Provide, inject
+
+from common.di.containers import ApplicationContainer
 
 
 @inject

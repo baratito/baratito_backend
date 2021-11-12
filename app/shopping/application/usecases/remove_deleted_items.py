@@ -1,5 +1,6 @@
-from common.di.containers import ApplicationContainer
 from dependency_injector.wiring import Provide, inject
+
+from common.di.containers import ApplicationContainer
 from shopping.application.repositories.list_repository import ListRepository
 
 
@@ -9,6 +10,6 @@ def remove_deleted_items(
         ApplicationContainer.list_repository_container.list_respository
     ],
     list_id: int = None,
-    list_uuid=None,
+    item_id=None,
 ):
-    list_repository.remove_lack_items(list_id=list_id, list_uuid=list_uuid)
+    list_repository.remove_lack_items(list_id=list_id, item_id=item_id)

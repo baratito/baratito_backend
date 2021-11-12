@@ -1,6 +1,8 @@
-from common.di.containers import ApplicationContainer
 from dependency_injector.wiring import Provide, inject
-from market.application.repositories.establishment_repository import EstablishmentRepository
+
+from common.di.containers import ApplicationContainer
+from market.application.repositories.establishment_repository import \
+    EstablishmentRepository
 
 
 @inject

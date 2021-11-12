@@ -1,5 +1,6 @@
-from common.di.containers import ApplicationContainer
 from dependency_injector.wiring import Provide, inject
+
+from common.di.containers import ApplicationContainer
 from market.application.repositories import ProductRepository
 from market.domain import Product
 

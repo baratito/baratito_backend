@@ -1,5 +1,6 @@
-from auth.persistence.user_repository import UserRepositoryImpl
 from dependency_injector import containers, providers
+
+from auth.persistence.user_repository import UserRepositoryImpl
 
 
 class UserContainer(containers.DeclarativeContainer):

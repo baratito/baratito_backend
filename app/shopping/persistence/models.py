@@ -1,10 +1,11 @@
 import datetime
 
-from common.persistence.config import Base
 from sqlalchemy import BIGINT, Column, DateTime, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
+
+from common.persistence.config import Base
 
 
 class List(Base):

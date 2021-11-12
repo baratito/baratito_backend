@@ -1,7 +1,8 @@
-from auth.presentation.utils import get_current_user
 from fastapi import APIRouter
 from fastapi.param_functions import Depends
 from fastapi.responses import JSONResponse
+
+from auth.presentation.utils import get_current_user
 from location.application.usecases import UserLocationForbidden
 from location.application.usecases import enable_user_location as enable_user_location_usecase
 from location.application.usecases.create_user_location import create_user_location
@@ -26,9 +27,9 @@ def get_user_locations(user=Depends(get_current_user), user_location: UserLocati
     return {"results": locations}
 
 
-@router.post("/user_location", name="location:user_location", status_code=201)
+@router.post("/user_locations", name="location:user_location", status_code=201)
 @router.post(
-    "/user_location/",
+    "/user_locations/",
     name="location:user_location",
     include_in_schema=False,
     status_code=201,
@@ -44,9 +45,9 @@ def post_user_location(user=Depends(get_current_user), user_location: UserLocati
     return user_location
 
 
-@router.patch("/user_location/{id}/enable", name="location:enable_user_location")
+@router.patch("/user_locations/{id}/enable", name="location:enable_user_location")
 @router.patch(
-    "/user_location/{id}/enable", name="location:enable_user_location", include_in_schema=False
+    "/user_locations/{id}/enable/", name="location:enable_user_location", include_in_schema=False
 )
 def enable_user_location(id: int = 0, user=Depends(get_current_user)):
     """
@@ -61,8 +62,10 @@ def enable_user_location(id: int = 0, user=Depends(get_current_user)):
     return user_location
 
 
-@router.patch("/user_location/{id}", name="location:enable_user_location")
-@router.patch("/user_location/{id}", name="location:enable_user_location", include_in_schema=False)
+@router.patch("/user_locations/{id}", name="location:enable_user_location")
+@router.patch(
+    "/user_locations/{id}", name="location:enable_user_location", include_in_schema=False
+)
 def edit_user_location(
     id: int = 0, user=Depends(get_current_user), user_location: UserLocationEdit = None
 ):

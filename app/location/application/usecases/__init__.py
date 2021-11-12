@@ -1,5 +1,6 @@
 from .create_user_location import create_user_location
 from .edit_user_location import edit_user_location_usecase
 from .enable_user_location import enable_user_location
+from .get_enable_location import get_enable_location
 from .get_user_location import UserLocationForbidden, get_user_location
 from .list_user_location import list_user_location

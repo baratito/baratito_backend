@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from pydantic.fields import Field
+from pydantic.main import Extra
 
 
 class Establishment(BaseModel):
@@ -12,3 +13,9 @@ class Establishment(BaseModel):
     longitude: float
     brand: str
     external_id: str
+
+    class Config:
+        extra = Extra.allow
+
+    def __str__(self) -> str:
+        return f"{self.name}"

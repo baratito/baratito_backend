@@ -1,8 +1,9 @@
 from typing import List
 
+from sqlalchemy.orm import Session
+
 from market.application import ProductRepository
 from market.domain import Product as ProductDomain
-from sqlalchemy.orm import Session
 
 from .models import CategoryProduct, Product
 

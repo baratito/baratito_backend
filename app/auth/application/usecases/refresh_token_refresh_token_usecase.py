@@ -1,15 +1,12 @@
 from datetime import datetime, timedelta
 
-from auth.application.repositories.user_repository import UserNotFound
-from auth.application.usecases import create_token, get_user_by_email
-from common.settings import (
-    ACCESS_TOKEN_EXPIRE_DAYS,
-    ALGORITHM,
-    REFRESH_TOKEN_EXPIRE_DAYS,
-    SECRET_KEY,
-)
 from fastapi.encoders import jsonable_encoder
 from jose import jwt
+
+from auth.application.repositories.user_repository import UserNotFound
+from auth.application.usecases import create_token, get_user_by_email
+from common.settings import (ACCESS_TOKEN_EXPIRE_DAYS, ALGORITHM,
+                             REFRESH_TOKEN_EXPIRE_DAYS, SECRET_KEY)
 
 
 def refresh_token_usecase(refresh_token: str):

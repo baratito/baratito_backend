@@ -1,7 +1,8 @@
-from auth.application.repositories import UserRepository
-from auth.application.repositories.user_repository import UserNotFound
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.session import Session
+
+from auth.application.repositories import UserRepository
+from auth.application.repositories.user_repository import UserNotFound
 
 from .models import User
 

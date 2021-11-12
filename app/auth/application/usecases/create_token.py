@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
 
-from common.settings import ALGORITHM, SECRET_KEY
 from jose import jwt
+
+from common.settings import ALGORITHM, SECRET_KEY
 
 
 def create_token(*, data: dict, expires: datetime = None) -> str:

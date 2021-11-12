@@ -1,8 +1,10 @@
 from typing import List
 
-from market.application.repositories.category_repository import CategoryRepository
-from market.domain import Category as CategoryDomain
 from sqlalchemy.orm import Session
+
+from market.application.repositories.category_repository import \
+    CategoryRepository
+from market.domain import Category as CategoryDomain
 
 from .models import Category
 

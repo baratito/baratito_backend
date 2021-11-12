@@ -1,6 +1,7 @@
+from sqlalchemy.orm import Session
+
 from location.application.repositories import UserLocationRepository
 from location.domain import UserLocation as UserLocationDomain
-from sqlalchemy.orm import Session
 
 from .models import UserLocation
 
@@ -65,6 +66,10 @@ class UserLocationRepositoryImpl(UserLocationRepository):
         )
         self.db_session.commit()
 
+    def disable_all_user_location(self, user_id: int):
+        self.db_session.query(UserLocation).filter_by(user_id=user_id).update({"enable": False})
+        self.db_session.commit()
+
     def edit(self, id: int, user_id, new_user_location):
         update_fields = {
             key: getattr(new_user_location, key)
@@ -74,3 +79,10 @@ class UserLocationRepositoryImpl(UserLocationRepository):
         self.db_session.query(UserLocation).filter_by(user_id=user_id, id=id).update(update_fields)
         self.db_session.commit()
         return self.get_by_id(id)
+
+    def get_enable_location_by_user(self, user_id: int = 0):
+        location = (
+            self.db_session.query(UserLocation).filter_by(user_id=user_id, enable=True).one()
+        )
+        location = self._to_domain(location) if location else None
+        return location

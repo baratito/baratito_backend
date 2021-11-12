@@ -1,8 +1,9 @@
 from profile.application.usecases.detail_profile import detail_profile
 
-from auth.presentation.utils import get_current_user
 from fastapi import APIRouter
 from fastapi.params import Depends
+
+from auth.presentation.utils import get_current_user
 
 router = APIRouter()
 

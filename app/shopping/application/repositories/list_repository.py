@@ -19,7 +19,7 @@ class ListRepository(ABC):
         ...
 
     @abstractclassmethod
-    def get_list_item_by_uuid(self, id_uuid):
+    def get_list_item_by_id(self, id_uuid):
         ...
 
     @abstractclassmethod

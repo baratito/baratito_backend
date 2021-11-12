@@ -1,8 +1,9 @@
-from common.persistence.config import Base
 from sqlalchemy import Column, Float, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import BIGINT, Boolean
+
+from common.persistence.config import Base
 
 
 class UserLocation(Base):

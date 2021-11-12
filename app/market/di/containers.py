@@ -1,9 +1,11 @@
 from typing import Container
 
 from dependency_injector import containers, providers
+
 from market.persistence import ProductRepositoryImpl
 from market.persistence.category_repository_impl import CategoryRepositoryImpl
-from market.persistence.establishment_repository_impl import EstablishmentRepositoryImpl
+from market.persistence.establishment_repository_impl import \
+    EstablishmentRepositoryImpl
 
 
 class ProductContainer(containers.DeclarativeContainer):

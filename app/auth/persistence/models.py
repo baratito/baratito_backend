@@ -1,7 +1,8 @@
-from common.persistence.config import Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import BIGINT
+
+from common.persistence.config import Base
 
 
 class User(Base):

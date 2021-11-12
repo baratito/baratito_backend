@@ -1,11 +1,12 @@
 import datetime
 
-from common.persistence.config import Base
 from geoalchemy2.types import Geography
 from sqlalchemy import Column, DateTime, Float, String, UniqueConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import BIGINT
+
+from common.persistence.config import Base
 
 
 class Product(Base):
