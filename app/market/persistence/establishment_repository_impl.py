@@ -3,8 +3,7 @@ from typing import List
 from geoalchemy2 import func
 from sqlalchemy.orm.session import Session
 
-from market.application.repositories.establishment_repository import \
-    EstablishmentRepository
+from market.application.repositories.establishment_repository import EstablishmentRepository
 from market.domain import Establishment, ProductPrice
 from market.domain.product import Product
 from market.domain.product_price_establishment import ProductPriceEstablishment
@@ -40,7 +39,7 @@ class EstablishmentRepositoryImpl(EstablishmentRepository):
 
     def _to_domain_price(self, price_db):
         price = ProductPrice(
-            id=price_db.id,
+            product_price_id=price_db.id,
             product_id=price_db.product_id,
             establishment_id=price_db.establishment_id,
             price=price_db.price,

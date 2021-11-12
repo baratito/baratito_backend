@@ -43,3 +43,7 @@ class ApplicationContainer(containers.DeclarativeContainer):
     list_repository_container = providers.Container(
         shopping_containers.ListContainer, db_session=db_session_container.db_session
     )
+
+    purchase_list_repository_container = providers.Container(
+        shopping_containers.PurchaseListContainer, db_session=db_session_container.db_session
+    )

@@ -8,17 +8,20 @@ from fastapi.param_functions import Depends
 
 from auth.presentation.utils import get_current_user
 from location.application.usecases.get_enable_location import get_enable_location
-from market.application.usecases.get_available_markets_count import get_available_markets_count
-from market.application.usecases.get_product_prices import get_product_prices
-from shopping.application.usecases.create_list import create_list
-from shopping.application.usecases.create_or_update_items import create_or_update_items
-from shopping.application.usecases.delete_list import delete_list
-from shopping.application.usecases.edit_list import edit_list
-from shopping.application.usecases.list_items import list_items
-from shopping.application.usecases.list_lists import list_lists
-from shopping.application.usecases.remove_deleted_items import remove_deleted_items
-from shopping.domain.establishment_products import EstablishmentProduct
-from shopping.domain.list_establishment_product import ListEstablishmentProduct
+from market.application.usecases import get_available_markets_count, get_product_prices
+from shopping.application.usecases import (
+    create_list,
+    create_or_update_items,
+    create_purchase_list,
+    delete_list,
+    detail_list,
+    edit_list,
+    get_best_route_info,
+    list_items,
+    list_lists,
+    remove_deleted_items,
+)
+from shopping.domain import EstablishmentProduct, ListEstablishmentProduct, PurchaseList
 
 from .schemas import BuySetting, ListCreate, ListEdit, ListItemCreate
 
@@ -181,6 +184,29 @@ def get_one_best_establishment(markets_with_items):
     return get_best_list(candidates)
 
 
+def create_purchase_list_wrapper(location, candidate, setting, list_obj, user):
+    origin = (location.latitude, location.longitude)
+    distance, duration, overview_polyline = get_best_route_info(
+        origin=origin, establishments=candidate.establishments, mode=setting.mode
+    )
+
+    purchase_list = PurchaseList(
+        name=list_obj.name,
+        color=list_obj.color,
+        user_id=user.id,
+        distance=distance,
+        duration=duration,
+        spent=0,
+        list_id=list_obj.id,
+        estimated_price=candidate.total(),
+        overview_polyline=overview_polyline,
+    )
+
+    purchase_list = create_purchase_list(purchase_list_obj=purchase_list, extra_data=candidate)
+
+    return purchase_list
+
+
 @router.post("/lists/{list_id}/buy", name="shopping:buy")
 @router.post("/lists/{list_id}/buy", name="shopping:buy", include_in_schema=False)
 def buy_list(user=Depends(get_current_user), list_id: int = None, setting: BuySetting = None):
@@ -215,9 +241,15 @@ def buy_list(user=Depends(get_current_user), list_id: int = None, setting: BuySe
         market.items = items_dict
         markets_with_items.append(market)
 
+    list_obj = detail_list(list_id=list_id)
+
     if len(markets) == 1 or setting.max_market_count == 1:
         candidate = get_one_best_establishment(markets_with_items)
-        return {"results": candidate}
+
+        result = create_purchase_list_wrapper(
+            location=location, candidate=candidate, setting=setting, list_obj=list_obj, user=user
+        )
+        return result
 
     candidates = []
 
@@ -227,6 +259,9 @@ def buy_list(user=Depends(get_current_user), list_id: int = None, setting: BuySe
 
     candidates = list(itertools.chain(*candidates))
     candidates.append(get_one_best_establishment(markets_with_items))
+    candidate = get_best_list(candidates)
 
-    best_fit = get_best_list(candidates)
-    return {"results": best_fit}
+    result = create_purchase_list_wrapper(
+        location=location, candidate=candidate, setting=setting, list_obj=list_obj, user=user
+    )
+    return result

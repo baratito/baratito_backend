@@ -1,7 +1,6 @@
 from fastapi import APIRouter
 from fastapi.exceptions import HTTPException
 from fastapi.param_functions import Depends
-from starlette.responses import JSONResponse
 
 from auth.presentation.utils import get_current_user
 from location.application.usecases.get_enable_location import get_enable_location
