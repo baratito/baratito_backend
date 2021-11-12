@@ -3,6 +3,7 @@ from .detail_product import detail_product
 from .get_available_markets_count import get_available_markets_count
 from .get_product_price import get_product_price
 from .get_product_prices import get_product_prices
+from .get_recommendations import get_recommendations
 from .list_category import list_category
 from .list_establisment import list_establisment
 from .list_products import list_products

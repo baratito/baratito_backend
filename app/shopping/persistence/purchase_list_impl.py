@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 
+from market.domain.establishment import Establishment
 from shopping.application.repositories.purchase_list_repository import PurchaseListRepository
 from shopping.domain.purchase_list import PurchaseList as PurchaseListDomain
 from shopping.domain.purchase_list_item import PurchaseListItem as PurchaseListItemDomain
@@ -47,6 +48,21 @@ class PurchaseListRepositoryImpl(PurchaseListRepository):
         )
 
         return item
+
+    def _to_domain_order(self, order_db):
+
+        establishment = Establishment(
+            id=order_db.establishment.id,
+            name=order_db.establishment.name,
+            establishment_type=order_db.establishment.establishment_type,
+            address=order_db.establishment.address,
+            county=order_db.establishment.county,
+            latitude=order_db.establishment.latitude,
+            longitude=order_db.establishment.longitude,
+            brand=order_db.establishment.brand,
+        )
+
+        return establishment
 
     def create(self, purchase_list: PurchaseListDomain):
         list_db = PurchaseList(
@@ -109,9 +125,34 @@ class PurchaseListRepositoryImpl(PurchaseListRepository):
         return self._to_domain(purchase_db)
 
     def complete(self, user_id, purchase_id):
-        print(purchase_id)
         self.db_session.query(PurchaseList).filter_by(user_id=user_id, id=purchase_id).update(
             {"status": True}
         )
         self.db_session.commit()
         return self.get_by_id(purchase_id)
+
+    def get_establishment_order(self, purchase_id):
+        query = (
+            self.db_session.query(EstablishmentPurchaseListOrder)
+            .filter_by(purchase_list_id=purchase_id)
+            .order_by(EstablishmentPurchaseListOrder.order.asc())
+        )
+
+        orders = []
+        for order in query.all():
+            orders.append(self._to_domain_order(order_db=order))
+
+        return orders
+
+    def get_items_by_purchase_id(self, purchase_id):
+        query = (
+            self.db_session.query(PurchaseListItem)
+            .filter_by(purchase_list_id=purchase_id)
+            .order_by(PurchaseListItem.name.asc())
+        )
+
+        items = []
+        for item in query.all():
+            items.append(self._to_domain_item(item))
+
+        return items

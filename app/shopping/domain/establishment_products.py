@@ -14,6 +14,7 @@ class EstablishmentProduct(BaseModel):
     address: str
     latitude: float
     longitude: float
+    brand: str
     products: Optional[Tylist[Dict]] = []
 
     def total(self):

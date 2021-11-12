@@ -51,7 +51,7 @@ class ListRepositoryImpl(ListRepository):
         return list_db
 
     def list(self, user_id: int):
-        lists_db = self.db_session.query(List).filter_by(user_id=user_id)
+        lists_db = self.db_session.query(List).filter_by(user_id=user_id).order_by(List.name.asc())
         lists = []
 
         for list_obj in lists_db:

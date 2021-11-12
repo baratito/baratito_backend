@@ -26,6 +26,7 @@ def create_purchase_list(
             address=establishment.address,
             latitude=establishment.latitude,
             longitude=establishment.longitude,
+            brand=establishment.brand,
         )
         purchase_list_repository.create_establishment_order(
             order=i, establishment_id=establishment_domain.id, purchase_list_id=purchase_list.id

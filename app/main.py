@@ -17,6 +17,7 @@ from shopping.application import usecases as shopping_usecases
 
 def setup() -> FastAPI:
     application = ApplicationContainer()
+    application.init_resources()
     application.wire(
         modules=[
             sys.modules[__name__],

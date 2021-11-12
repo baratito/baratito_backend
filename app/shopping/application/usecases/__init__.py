@@ -4,6 +4,7 @@ from .create_or_update_items import create_or_update_items
 from .create_purchase_list import create_purchase_list
 from .delete_list import delete_list
 from .detail_list import detail_list
+from .detail_purchase_list import detail_purchase_list
 from .edit_list import edit_list
 from .get_best_route import get_best_route_info
 from .list_items import list_items

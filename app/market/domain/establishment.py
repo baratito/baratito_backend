@@ -10,10 +10,10 @@ class Establishment(BaseModel):
     name: str
     establishment_type: str
     address: str
-    county: Optional[str]
+    county: Optional[str] = ""
     latitude: float
     longitude: float
-    brand: Optional[str]
+    brand: Optional[str] = ""
     external_id: Optional[str]
 
     class Config:

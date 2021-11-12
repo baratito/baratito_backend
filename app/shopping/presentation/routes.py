@@ -15,6 +15,7 @@ from shopping.application.usecases import (
     create_purchase_list,
     delete_list,
     detail_list,
+    detail_purchase_list,
     edit_list,
     get_best_route_info,
     list_items,
@@ -130,6 +131,7 @@ def get_best_establishment_by_combination(markets_combination):
                 address=market.address,
                 latitude=market.latitude,
                 longitude=market.longitude,
+                brand=market.brand,
             )
             list_establishment_product.establishments.append(estblishment_product)
 
@@ -175,6 +177,7 @@ def get_one_best_establishment(markets_with_items):
         candidate = EstablishmentProduct(
             id=market.id,
             name=market.name,
+            brand=market.brand,
             establishment_type=market.establishment_type,
             address=market.address,
             latitude=market.latitude,
@@ -271,7 +274,7 @@ def buy_list(user=Depends(get_current_user), list_id: int = None, setting: BuySe
 
 @router.get("/purchase_lists", name="shopping:list_purchase_lists")
 @router.get("/purchase_lists/", name="shopping:list_purchase_lists", include_in_schema=False)
-def get_purchase_list(user=Depends(get_current_user), in_progress: int = None):
+def get_purchase_lists(user=Depends(get_current_user), in_progress: int = None):
     """
     List purchase lists
     """
@@ -292,6 +295,21 @@ def complete_method_purchase_list(user=Depends(get_current_user), id=None):
     List purchase lists
     """
 
-    p = complete_purchase_list(user_id=user.id, purchase_id=id)
+    purchase = complete_purchase_list(user_id=user.id, purchase_id=id)
+    return purchase
 
-    return p
+
+@router.get("/purchase_lists/{id}", name="shopping:complete_purchase_lists")
+@router.get(
+    "/purchase_lists/{id}/",
+    name="shopping:detail_purchase_lists",
+    include_in_schema=False,
+)
+def get_purchase_list(user=Depends(get_current_user), id=None):
+    """
+    Detail purchase lists
+    """
+
+    purchase = detail_purchase_list(purchase_id=id)
+
+    return purchase

@@ -12,9 +12,11 @@ from market.application.usecases import (
 )
 from market.application.usecases.get_available_markets_count import get_available_markets_count
 from market.application.usecases.get_product_price import get_product_price
+from market.application.usecases.get_recommendations import get_recommendations
 from market.application.usecases.list_category import list_category
 from market.application.usecases.total_product import total_products
 from market.domain import establishment
+from market.domain.product import Product
 
 router = APIRouter()
 
@@ -84,3 +86,14 @@ def get_categories():
     """
     categories = list_category()
     return {"results": categories}
+
+
+@router.get("/products/recommendations", name="market:establishments")
+@router.get("/products/recommendations/", name="market:establishments", include_in_schema=False)
+def recommendations():
+    """
+    Get list of establishments
+    """
+
+    products = get_recommendations()
+    return {"results": products}
