@@ -12,3 +12,11 @@ class PurchaseListRepository(ABC):
     @abstractclassmethod
     def create_purchase_list(self, purchase_list_item: PurchaseListItem):
         ...
+
+    @abstractclassmethod
+    def list(self, user_id, in_progress: int = None):
+        ...
+
+    @abstractclassmethod
+    def create_establishment_order(self, order, establishment_id, purchase_list_id):
+        ...

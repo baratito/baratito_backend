@@ -21,6 +21,8 @@ from shopping.application.usecases import (
     list_lists,
     remove_deleted_items,
 )
+from shopping.application.usecases.complete_purchase_list import complete_purchase_list
+from shopping.application.usecases.list_purchase_lists import list_purchase_lists
 from shopping.domain import EstablishmentProduct, ListEstablishmentProduct, PurchaseList
 
 from .schemas import BuySetting, ListCreate, ListEdit, ListItemCreate
@@ -208,7 +210,7 @@ def create_purchase_list_wrapper(location, candidate, setting, list_obj, user):
 
 
 @router.post("/lists/{list_id}/buy", name="shopping:buy")
-@router.post("/lists/{list_id}/buy", name="shopping:buy", include_in_schema=False)
+@router.post("/lists/{list_id}/buy/ ", name="shopping:buy", include_in_schema=False)
 def buy_list(user=Depends(get_current_user), list_id: int = None, setting: BuySetting = None):
     """
     Buy a list
@@ -265,3 +267,31 @@ def buy_list(user=Depends(get_current_user), list_id: int = None, setting: BuySe
         location=location, candidate=candidate, setting=setting, list_obj=list_obj, user=user
     )
     return result
+
+
+@router.get("/purchase_lists", name="shopping:list_purchase_lists")
+@router.get("/purchase_lists/", name="shopping:list_purchase_lists", include_in_schema=False)
+def get_purchase_list(user=Depends(get_current_user), in_progress: int = None):
+    """
+    List purchase lists
+    """
+
+    purchase_lists = list_purchase_lists(user_id=user.id, in_progress=in_progress)
+
+    return {"results": purchase_lists}
+
+
+@router.patch("/purchase_lists/{id}/complete", name="shopping:complete_purchase_lists")
+@router.patch(
+    "/purchase_lists/{id}/complete/",
+    name="shopping:complete_purchase_lists",
+    include_in_schema=False,
+)
+def complete_method_purchase_list(user=Depends(get_current_user), id=None):
+    """
+    List purchase lists
+    """
+
+    p = complete_purchase_list(user_id=user.id, purchase_id=id)
+
+    return p

@@ -18,7 +18,7 @@ def create_purchase_list(
 
     purchase_list = purchase_list_repository.create(purchase_list=purchase_list_obj)
 
-    for establishment in extra_data.establishments:
+    for i, establishment in enumerate(extra_data.establishments):
         establishment_domain = Establishment(
             id=establishment.id,
             name=establishment.name,
@@ -26,6 +26,9 @@ def create_purchase_list(
             address=establishment.address,
             latitude=establishment.latitude,
             longitude=establishment.longitude,
+        )
+        purchase_list_repository.create_establishment_order(
+            order=i, establishment_id=establishment_domain.id, purchase_list_id=purchase_list.id
         )
         purchase_item_establishment = PurchaseItemEstablishment(establishment=establishment_domain)
         for product in establishment.products:

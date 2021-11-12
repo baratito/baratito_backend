@@ -3,7 +3,11 @@ from sqlalchemy.orm import Session
 from shopping.application.repositories.purchase_list_repository import PurchaseListRepository
 from shopping.domain.purchase_list import PurchaseList as PurchaseListDomain
 from shopping.domain.purchase_list_item import PurchaseListItem as PurchaseListItemDomain
-from shopping.persistence.models import PurchaseList, PurchaseListItem
+from shopping.persistence.models import (
+    EstablishmentPurchaseListOrder,
+    PurchaseList,
+    PurchaseListItem,
+)
 
 
 class PurchaseListRepositoryImpl(PurchaseListRepository):
@@ -79,3 +83,35 @@ class PurchaseListRepositoryImpl(PurchaseListRepository):
         item = self._to_domain_item(item_db=item_db)
 
         return item
+
+    def list(self, user_id, in_progress: int = None):
+        query = self.db_session.query(PurchaseList).filter_by(user_id=user_id)
+
+        if in_progress is not None:
+            query = query.filter_by(status=not bool(in_progress))
+
+        purchases = []
+
+        for p in query:
+            purchases.append(self._to_domain(p))
+        return purchases
+
+    def create_establishment_order(self, order, establishment_id, purchase_list_id):
+        order_db = EstablishmentPurchaseListOrder(
+            order=order, establishment_id=establishment_id, purchase_list_id=purchase_list_id
+        )
+        self.db_session.add(order_db)
+        self.db_session.commit()
+        return order_db
+
+    def get_by_id(self, id):
+        purchase_db = self.db_session.query(PurchaseList).get(id)
+        return self._to_domain(purchase_db)
+
+    def complete(self, user_id, purchase_id):
+        print(purchase_id)
+        self.db_session.query(PurchaseList).filter_by(user_id=user_id, id=purchase_id).update(
+            {"status": True}
+        )
+        self.db_session.commit()
+        return self.get_by_id(purchase_id)

@@ -66,7 +66,6 @@ class PurchaseListItem(Base):
 
     price = Column(Float)
     quantity = Column(Integer)
-
     is_buyed = Column(Boolean)
 
     product_price_id = Column(BIGINT, ForeignKey("product_price.id"))
@@ -80,3 +79,16 @@ class PurchaseListItem(Base):
 
     establishment_id = Column(BIGINT, ForeignKey("establishment.id"))
     establishment = relationship("Establishment", backref="purchase_list_items")
+
+
+class EstablishmentPurchaseListOrder(Base):
+    __tablename__ = "establishment_purchase_list_order"
+    id = Column(BIGINT, primary_key=True, index=True)
+
+    order = Column(Integer)
+
+    purchase_list_id = Column(BIGINT, ForeignKey("purchase_list.id"))
+    purchase_list = relationship("PurchaseList", backref="establishment_orders")
+
+    establishment_id = Column(BIGINT, ForeignKey("establishment.id"))
+    establishment = relationship("Establishment", backref="establishment_orders")
