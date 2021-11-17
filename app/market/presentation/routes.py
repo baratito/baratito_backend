@@ -15,8 +15,6 @@ from market.application.usecases.get_product_price import get_product_price
 from market.application.usecases.get_recommendations import get_recommendations
 from market.application.usecases.list_category import list_category
 from market.application.usecases.total_product import total_products
-from market.domain import establishment
-from market.domain.product import Product
 
 router = APIRouter()
 

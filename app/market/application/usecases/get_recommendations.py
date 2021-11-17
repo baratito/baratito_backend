@@ -23,5 +23,4 @@ def get_recommendations(
         if len(product):
             products.append(product[0])
 
-    print(products)
     return products

@@ -65,94 +65,102 @@ class PurchaseListRepositoryImpl(PurchaseListRepository):
         return establishment
 
     def create(self, purchase_list: PurchaseListDomain):
-        list_db = PurchaseList(
-            name=purchase_list.name,
-            color=purchase_list.color,
-            user_id=purchase_list.user_id,
-            distance=purchase_list.distance,
-            duration=purchase_list.duration,
-            spent=purchase_list.spent,
-            list_id=purchase_list.list_id,
-            estimated_price=purchase_list.estimated_price,
-            status=bool(purchase_list.status),
-            overview_polyline=purchase_list.overview_polyline,
-        )
-        self.db_session.add(list_db)
-        self.db_session.commit()
+        with self.db_session() as session:
+            list_db = PurchaseList(
+                name=purchase_list.name,
+                color=purchase_list.color,
+                user_id=purchase_list.user_id,
+                distance=purchase_list.distance,
+                duration=purchase_list.duration,
+                spent=purchase_list.spent,
+                list_id=purchase_list.list_id,
+                estimated_price=purchase_list.estimated_price,
+                status=bool(purchase_list.status),
+                overview_polyline=purchase_list.overview_polyline,
+            )
+            session.add(list_db)
+            session.commit()
         list_obj = self._to_domain(list_db=list_db)
         return list_obj
 
     def create_purchase_list(self, purchase_list_item: PurchaseListItemDomain):
-        item_db = PurchaseListItem(
-            name=purchase_list_item.name,
-            price=purchase_list_item.price,
-            quantity=purchase_list_item.quantity,
-            is_buyed=purchase_list_item.is_buyed,
-            product_price_id=purchase_list_item.product_price_id,
-            product_id=purchase_list_item.product_id,
-            purchase_list_id=purchase_list_item.purchase_list_id,
-            establishment_id=purchase_list_item.establishment_id,
-        )
-        self.db_session.add(item_db)
-        self.db_session.commit()
+        with self.db_session() as session:
+            item_db = PurchaseListItem(
+                name=purchase_list_item.name,
+                price=purchase_list_item.price,
+                quantity=purchase_list_item.quantity,
+                is_buyed=purchase_list_item.is_buyed,
+                product_price_id=purchase_list_item.product_price_id,
+                product_id=purchase_list_item.product_id,
+                purchase_list_id=purchase_list_item.purchase_list_id,
+                establishment_id=purchase_list_item.establishment_id,
+            )
+            session.add(item_db)
+            session.commit()
 
         item = self._to_domain_item(item_db=item_db)
 
         return item
 
     def list(self, user_id, in_progress: int = None):
-        query = self.db_session.query(PurchaseList).filter_by(user_id=user_id)
+        with self.db_session() as session:
+            query = session.query(PurchaseList).filter_by(user_id=user_id)
 
-        if in_progress is not None:
-            query = query.filter_by(status=not bool(in_progress))
+            if in_progress is not None:
+                query = query.filter_by(status=not bool(in_progress))
 
-        purchases = []
+            purchases = []
 
-        for p in query:
-            purchases.append(self._to_domain(p))
+            for p in query:
+                purchases.append(self._to_domain(p))
         return purchases
 
     def create_establishment_order(self, order, establishment_id, purchase_list_id):
-        order_db = EstablishmentPurchaseListOrder(
-            order=order, establishment_id=establishment_id, purchase_list_id=purchase_list_id
-        )
-        self.db_session.add(order_db)
-        self.db_session.commit()
+        with self.db_session() as session:
+            order_db = EstablishmentPurchaseListOrder(
+                order=order, establishment_id=establishment_id, purchase_list_id=purchase_list_id
+            )
+            session.add(order_db)
+            session.commit()
         return order_db
 
     def get_by_id(self, id):
-        purchase_db = self.db_session.query(PurchaseList).get(id)
-        return self._to_domain(purchase_db)
+        with self.db_session() as session:
+            purchase_db = session.query(PurchaseList).get(id)
+            return self._to_domain(purchase_db)
 
     def complete(self, user_id, purchase_id):
-        self.db_session.query(PurchaseList).filter_by(user_id=user_id, id=purchase_id).update(
-            {"status": True}
-        )
-        self.db_session.commit()
-        return self.get_by_id(purchase_id)
+        with self.db_session() as session:
+            session.query(PurchaseList).filter_by(user_id=user_id, id=purchase_id).update(
+                {"status": True}
+            )
+            session.commit()
+            return self.get_by_id(purchase_id)
 
     def get_establishment_order(self, purchase_id):
-        query = (
-            self.db_session.query(EstablishmentPurchaseListOrder)
-            .filter_by(purchase_list_id=purchase_id)
-            .order_by(EstablishmentPurchaseListOrder.order.asc())
-        )
+        with self.db_session() as session:
+            query = (
+                session.query(EstablishmentPurchaseListOrder)
+                .filter_by(purchase_list_id=purchase_id)
+                .order_by(EstablishmentPurchaseListOrder.order.asc())
+            )
 
-        orders = []
-        for order in query.all():
-            orders.append(self._to_domain_order(order_db=order))
+            orders = []
+            for order in query.all():
+                orders.append(self._to_domain_order(order_db=order))
 
         return orders
 
     def get_items_by_purchase_id(self, purchase_id):
-        query = (
-            self.db_session.query(PurchaseListItem)
-            .filter_by(purchase_list_id=purchase_id)
-            .order_by(PurchaseListItem.name.asc())
-        )
+        with self.db_session() as session:
+            query = (
+                session.query(PurchaseListItem)
+                .filter_by(purchase_list_id=purchase_id)
+                .order_by(PurchaseListItem.name.asc())
+            )
 
-        items = []
-        for item in query.all():
-            items.append(self._to_domain_item(item))
+            items = []
+            for item in query.all():
+                items.append(self._to_domain_item(item))
 
         return items

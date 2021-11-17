@@ -75,52 +75,55 @@ class EstablishmentRepositoryImpl(EstablishmentRepository):
         return price
 
     def list(self, offset: int, limit: int) -> List[Establishment]:
-        establishments_db = (
-            self.db_session.query(EstablishmentModel).offset(offset).limit(limit).all()
-        )
-        establishments = self._to_domain(establishment_db=establishments_db)
+        with self.db_session() as session:
+            establishments_db = session.query(EstablishmentModel).offset(offset).limit(limit).all()
+            establishments = self._to_domain(establishment_db=establishments_db)
         return establishments
 
     def nearby(self, lat: float, lng: float, distance: float = 1500):
-        filter = func.ST_DWithin(
-            EstablishmentModel.location,
-            func.Geometry(func.ST_GeographyFromText("POINT({} {})".format(lng, lat))),
-            distance,
-        )
-        query = self.db_session.query(EstablishmentModel).filter(filter)
-        establishment_db = query.all()
-        establishments = self._to_domain(establishment_db=establishment_db)
+        with self.db_session() as session:
+            filter = func.ST_DWithin(
+                EstablishmentModel.location,
+                func.Geometry(func.ST_GeographyFromText("POINT({} {})".format(lng, lat))),
+                distance,
+            )
+            query = session.query(EstablishmentModel).filter(filter)
+            establishment_db = query.all()
+            establishments = self._to_domain(establishment_db=establishment_db)
         return establishments
 
     def total(self) -> int:
-        return self.db_session.query(EstablishmentModel).count()
+        with self.db_session() as session:
+            return session.query(EstablishmentModel).count()
 
     def get_products_prices(self, establishment_id: int, product_ids):
-        prices_db = (
-            self.db_session.query(ProductPriceModel)
-            .filter(ProductPriceModel.product_id.in_(product_ids))
-            .filter_by(establishment_id=establishment_id)
-        )
+        with self.db_session() as session:
+            prices_db = (
+                session.query(ProductPriceModel)
+                .filter(ProductPriceModel.product_id.in_(product_ids))
+                .filter_by(establishment_id=establishment_id)
+            )
 
-        prices = []
+            prices = []
 
-        for price in prices_db:
-            prices.append(self._to_domain_price(price))
+            for price in prices_db:
+                prices.append(self._to_domain_price(price))
 
         return prices
 
     def get_product_price(self, establishment_ids, product_id):
-        prices_db = (
-            self.db_session.query(ProductPriceModel, EstablishmentModel)
-            .filter(ProductPriceModel.establishment_id.in_(establishment_ids))
-            .filter_by(product_id=product_id)
-            .filter(EstablishmentModel.id == ProductPriceModel.establishment_id)
-        )
+        with self.db_session() as session:
+            prices_db = (
+                session.query(ProductPriceModel, EstablishmentModel)
+                .filter(ProductPriceModel.establishment_id.in_(establishment_ids))
+                .filter_by(product_id=product_id)
+                .filter(EstablishmentModel.id == ProductPriceModel.establishment_id)
+            )
 
-        prices = []
+            prices = []
 
-        product = self.db_session.query(ProductModel).get(product_id)
-        for price, establishment in prices_db:
-            prices.append(self._to_domain_price_establishment(price, establishment, product))
+            product = session.query(ProductModel).get(product_id)
+            for price, establishment in prices_db:
+                prices.append(self._to_domain_price_establishment(price, establishment, product))
 
         return prices

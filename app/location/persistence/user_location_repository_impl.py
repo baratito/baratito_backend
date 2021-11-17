@@ -27,48 +27,51 @@ class UserLocationRepositoryImpl(UserLocationRepository):
         return location
 
     def create(self, user_location: UserLocationDomain):
-        location = UserLocation(
-            name=user_location.name,
-            address=user_location.address,
-            latitude=user_location.latitude,
-            longitude=user_location.longitude,
-            enable=user_location.enable,
-            city=user_location.city,
-            country=user_location.country,
-            user_id=user_location.user_id,
-        )
-        self.db_session.add(location)
-        self.db_session.commit()
+        with self.db_session() as session:
+            location = UserLocation(
+                name=user_location.name,
+                address=user_location.address,
+                latitude=user_location.latitude,
+                longitude=user_location.longitude,
+                enable=user_location.enable,
+                city=user_location.city,
+                country=user_location.country,
+                user_id=user_location.user_id,
+            )
+            session.add(location)
+            session.commit()
         location = self._to_domain(location_db=location)
         return location
 
     def filter(self, user_id, enable=None):
-        query = self.db_session.query(UserLocation).filter_by(user_id=user_id)
+        with self.db_session() as session:
+            query = session.query(UserLocation).filter_by(user_id=user_id)
 
-        if enable is not None:
-            query = query.filter_by(enable=enable)
+            if enable is not None:
+                query = query.filter_by(enable=enable)
 
-        locations_db = query.all()
-        locations = []
-        for location in locations_db:
-            locations.append(self._to_domain(location))
+            locations_db = query.all()
+            locations = []
+            for location in locations_db:
+                locations.append(self._to_domain(location))
         return locations
 
     def get_by_id(self, id: int):
-        location = self.db_session.query(UserLocation).get(id)
-        location = self._to_domain(location) if location else None
+        with self.db_session() as session:
+            location = session.query(UserLocation).get(id)
+            location = self._to_domain(location) if location else None
         return location
 
     def enable_for_user(self, id: int, user_id: int):
-        self.db_session.query(UserLocation).filter_by(user_id=user_id).update({"enable": False})
-        self.db_session.query(UserLocation).filter_by(user_id=user_id, id=id).update(
-            {"enable": True}
-        )
-        self.db_session.commit()
+        with self.db_session() as session:
+            session.query(UserLocation).filter_by(user_id=user_id).update({"enable": False})
+            session.query(UserLocation).filter_by(user_id=user_id, id=id).update({"enable": True})
+            session.commit()
 
     def disable_all_user_location(self, user_id: int):
-        self.db_session.query(UserLocation).filter_by(user_id=user_id).update({"enable": False})
-        self.db_session.commit()
+        with self.db_session() as session:
+            session.query(UserLocation).filter_by(user_id=user_id).update({"enable": False})
+            session.commit()
 
     def edit(self, id: int, user_id, new_user_location):
         update_fields = {
@@ -76,13 +79,13 @@ class UserLocationRepositoryImpl(UserLocationRepository):
             for key in new_user_location.__fields__
             if getattr(new_user_location, key) is not None
         }
-        self.db_session.query(UserLocation).filter_by(user_id=user_id, id=id).update(update_fields)
-        self.db_session.commit()
+        with self.db_session() as session:
+            session.query(UserLocation).filter_by(user_id=user_id, id=id).update(update_fields)
+            session.commit()
         return self.get_by_id(id)
 
     def get_enable_location_by_user(self, user_id: int = 0):
-        location = (
-            self.db_session.query(UserLocation).filter_by(user_id=user_id, enable=True).one()
-        )
+        with self.db_session() as session:
+            location = session.query(UserLocation).filter_by(user_id=user_id, enable=True).one()
         location = self._to_domain(location) if location else None
         return location

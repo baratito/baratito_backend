@@ -2,8 +2,7 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
-from market.application.repositories.category_repository import \
-    CategoryRepository
+from market.application.repositories.category_repository import CategoryRepository
 from market.domain import Category as CategoryDomain
 
 from .models import Category
@@ -31,14 +30,17 @@ class CategoryRepositoryImpl(CategoryRepository):
         return categories
 
     def list(self) -> List[Category]:
-        categories_db = self.db_session.query(Category).filter_by(parent_id=None).all()
-        categories = self._to_domain(categories_db=categories_db)
+        with self.db_session() as session:
+            categories_db = session.query(Category).filter_by(parent_id=None).all()
+            categories = self._to_domain(categories_db=categories_db)
         return categories
 
     def get_by_external_id(self, external_id: str) -> Category:
-        return self.db_session.query(Category).filter_by(external_id=external_id).one()
+        with self.db_session() as session:
+            return session.query(Category).filter_by(external_id=external_id).one()
 
     def create(self, name, external_id, parent_id=None):
-        category = Category(name=name, external_id=external_id, parent_id=parent_id)
-        self.db_session.add(category)
-        self.db_session.commit()
+        with self.db_session() as session:
+            category = Category(name=name, external_id=external_id, parent_id=parent_id)
+            session.add(category)
+            session.commit()

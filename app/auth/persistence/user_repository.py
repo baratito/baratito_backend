@@ -14,15 +14,17 @@ class UserRepositoryImpl(UserRepository):
         self.db_session = db_session
 
     def get_by_email(self, email: str) -> User:
-        user = None
-        try:
-            user = self.db_session.query(User).filter_by(email=email).one()
-        except NoResultFound as e:
-            raise UserNotFound
+        with self.db_session() as session:
+            user = None
+            try:
+                user = session.query(User).filter_by(email=email).one()
+            except NoResultFound as e:
+                raise UserNotFound
         return user
 
     def create(self, email: str) -> User:
-        user = User(email=email)
-        self.db_session.add(user)
-        self.db_session.commit()
+        with self.db_session() as session:
+            user = User(email=email)
+            session.add(user)
+            session.commit()
         return user

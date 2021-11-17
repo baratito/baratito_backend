@@ -9,41 +9,37 @@ from market.di import containers as market_containers
 from shopping.di import containers as shopping_containers
 
 
-class DBSessionContainer(containers.DeclarativeContainer):
-    db_session = providers.Resource(get_db_session)
-
-
 class ApplicationContainer(containers.DeclarativeContainer):
-    db_session_container = providers.Container(DBSessionContainer)
+    db_session_container = providers.Singleton(get_db_session.Database)
 
     user_repository_container = providers.Container(
-        auth_containers.UserContainer, db_session=db_session_container.db_session
+        auth_containers.UserContainer, db_session=db_session_container.provided.session
     )
 
     product_repository_container = providers.Container(
-        market_containers.ProductContainer, db_session=db_session_container.db_session
+        market_containers.ProductContainer, db_session=db_session_container.provided.session
     )
 
     profile_repository_container = providers.Container(
-        profile_containers.ProfileContainer, db_session=db_session_container.db_session
+        profile_containers.ProfileContainer, db_session=db_session_container.provided.session
     )
 
     establishment_repository_container = providers.Container(
-        market_containers.EstablishmentContainer, db_session=db_session_container.db_session
+        market_containers.EstablishmentContainer, db_session=db_session_container.provided.session
     )
 
     category_repository_container = providers.Container(
-        market_containers.CategoryContainer, db_session=db_session_container.db_session
+        market_containers.CategoryContainer, db_session=db_session_container.provided.session
     )
 
     user_location_repository_container = providers.Container(
-        location_containers.UserLocationContainer, db_session=db_session_container.db_session
+        location_containers.UserLocationContainer, db_session=db_session_container.provided.session
     )
 
     list_repository_container = providers.Container(
-        shopping_containers.ListContainer, db_session=db_session_container.db_session
+        shopping_containers.ListContainer, db_session=db_session_container.provided.session
     )
 
     purchase_list_repository_container = providers.Container(
-        shopping_containers.PurchaseListContainer, db_session=db_session_container.db_session
+        shopping_containers.PurchaseListContainer, db_session=db_session_container.provided.session
     )

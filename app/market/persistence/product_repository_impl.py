@@ -29,32 +29,35 @@ class ProductRepositoryImpl(ProductRepository):
     def list_products(
         self, offset: int = 0, limit: int = 100, q: str = None, category: int = None
     ) -> List[Product]:
-        query = self.db_session.query(Product)
+        with self.db_session() as session:
+            query = session.query(Product)
 
-        if q is not None:
-            query = query.filter(Product.name.ilike(f"%{q}%"))
+            if q is not None:
+                query = query.filter(Product.name.ilike(f"%{q}%"))
 
-        if category is not None:
-            query = query.join(CategoryProduct).filter_by(category_id=category)
+            if category is not None:
+                query = query.join(CategoryProduct).filter_by(category_id=category)
 
-        products_db = query.offset(offset).limit(limit).all()
-        products = []
-        for product in products_db:
-            products.append(self._to_domain(product))
+            products_db = query.offset(offset).limit(limit).all()
+            products = []
+            for product in products_db:
+                products.append(self._to_domain(product))
         return products
 
     def get_by_id(self, id: int) -> Product:
-        product_db = self.db_session.query(Product).get(id)
-        product = self._to_domain(product_db)
+        with self.db_session() as session:
+            product_db = session.query(Product).get(id)
+            product = self._to_domain(product_db)
         return product
 
     def total(self, q: str = None, category: int = None) -> int:
-        query = self.db_session.query(Product)
+        with self.db_session() as session:
+            query = session.query(Product)
 
-        if q is not None:
-            query = query.filter(Product.name.ilike(f"%{q}%"))
+            if q is not None:
+                query = query.filter(Product.name.ilike(f"%{q}%"))
 
-        if category is not None:
-            query = query.join(CategoryProduct).filter_by(category_id=category)
+            if category is not None:
+                query = query.join(CategoryProduct).filter_by(category_id=category)
 
         return query.count()
