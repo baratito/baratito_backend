@@ -37,7 +37,7 @@ def create_purchase_list(
                 name=product["product"]["name"],
                 price=product["price"],
                 quantity=product["quantity"],
-                is_buyed=False,
+                is_bought=False,
                 product_price_id=product["product_price_id"],
                 product_id=product["product_id"],
                 purchase_list_id=purchase_list.id,

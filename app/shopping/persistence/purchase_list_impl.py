@@ -40,7 +40,7 @@ class PurchaseListRepositoryImpl(PurchaseListRepository):
             name=item_db.name,
             price=item_db.price,
             quantity=item_db.quantity,
-            is_buyed=item_db.is_buyed,
+            is_bought=item_db.is_bought,
             product_price_id=item_db.product_price_id,
             product_id=item_db.product_id,
             purchase_list_id=item_db.purchase_list_id,
@@ -89,7 +89,7 @@ class PurchaseListRepositoryImpl(PurchaseListRepository):
                 name=purchase_list_item.name,
                 price=purchase_list_item.price,
                 quantity=purchase_list_item.quantity,
-                is_buyed=purchase_list_item.is_buyed,
+                is_bought=purchase_list_item.is_bought,
                 product_price_id=purchase_list_item.product_price_id,
                 product_id=purchase_list_item.product_id,
                 purchase_list_id=purchase_list_item.purchase_list_id,
@@ -129,10 +129,10 @@ class PurchaseListRepositoryImpl(PurchaseListRepository):
             purchase_db = session.query(PurchaseList).get(id)
             return self._to_domain(purchase_db)
 
-    def complete(self, user_id, purchase_id):
+    def complete(self, user_id, purchase_id, spent):
         with self.db_session() as session:
             session.query(PurchaseList).filter_by(user_id=user_id, id=purchase_id).update(
-                {"status": True}
+                {"status": True, "spent": spent}
             )
             session.commit()
             return self.get_by_id(purchase_id)
@@ -164,3 +164,17 @@ class PurchaseListRepositoryImpl(PurchaseListRepository):
                 items.append(self._to_domain_item(item))
 
         return items
+
+    def get_purchase_item_by_id(self, item_id):
+        with self.db_session() as session:
+            purchase_db = session.query(PurchaseListItem).get(item_id)
+            return self._to_domain_item(purchase_db)
+
+    def update_purchase_list_item(self, item_id, data):
+        update_fields = {
+            key: getattr(data, key) for key in data.__fields__ if getattr(data, key) is not None
+        }
+        with self.db_session() as session:
+            session.query(PurchaseListItem).filter_by(id=item_id).update(update_fields)
+            session.commit()
+        return self.get_purchase_item_by_id(item_id)

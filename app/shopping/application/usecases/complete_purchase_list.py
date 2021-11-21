@@ -12,6 +12,10 @@ def complete_purchase_list(
     user_id: int = None,
     purchase_id: int = None,
 ):
-    purchase = purchase_list_repository.complete(user_id=user_id, purchase_id=purchase_id)
+    items = purchase_list_repository.get_items_by_purchase_id(purchase_id=purchase_id)
+    spent = sum([item.price * item.quantity for item in items if item.is_bought])
+    purchase = purchase_list_repository.complete(
+        user_id=user_id, purchase_id=purchase_id, spent=spent
+    )
 
     return purchase

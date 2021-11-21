@@ -10,7 +10,7 @@ class PurchaseListItem(BaseModel):
     name: str
     price: float
     quantity: int
-    is_buyed: Optional[bool] = False
+    is_bought: Optional[bool] = False
     product_price_id: int
     product_id: int
     purchase_list_id: int

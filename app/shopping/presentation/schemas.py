@@ -40,3 +40,7 @@ class BuySetting(BaseModel):
 
     class Config:
         use_enum_values = True
+
+
+class PurchaseListItemEdit(BaseModel):
+    is_bought: bool

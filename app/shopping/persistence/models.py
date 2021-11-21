@@ -66,7 +66,7 @@ class PurchaseListItem(Base):
 
     price = Column(Float)
     quantity = Column(Integer)
-    is_buyed = Column(Boolean)
+    is_bought = Column(Boolean)
 
     product_price_id = Column(BIGINT, ForeignKey("product_price.id"))
     product_price = relationship("ProductPrice", backref="purchase_list_items")

@@ -17,6 +17,7 @@ from shopping.application.usecases import (
     detail_list,
     detail_purchase_list,
     edit_list,
+    edit_purchase_list_item,
     get_best_route_info,
     list_items,
     list_lists,
@@ -26,7 +27,7 @@ from shopping.application.usecases.complete_purchase_list import complete_purcha
 from shopping.application.usecases.list_purchase_lists import list_purchase_lists
 from shopping.domain import EstablishmentProduct, ListEstablishmentProduct, PurchaseList
 
-from .schemas import BuySetting, ListCreate, ListEdit, ListItemCreate
+from .schemas import BuySetting, ListCreate, ListEdit, ListItemCreate, PurchaseListItemEdit
 
 router = APIRouter()
 
@@ -311,5 +312,23 @@ def get_purchase_list(user=Depends(get_current_user), id=None):
     """
 
     purchase = detail_purchase_list(purchase_id=id)
+
+    return purchase
+
+
+@router.patch("/purchase_list_items/{id}", name="shopping:purchase_list_items")
+@router.patch(
+    "/purchase_list_items/{id}/",
+    name="shopping:purchase_list_items",
+    include_in_schema=False,
+)
+def patch_purchase_list_item(
+    user=Depends(get_current_user), id=None, data: PurchaseListItemEdit = None
+):
+    """
+    Edit purchase list item
+    """
+
+    purchase = edit_purchase_list_item(item_id=id, data=data)
 
     return purchase
