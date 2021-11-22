@@ -12,6 +12,7 @@ from common.settings import API_PREFIX
 from location.application import usecases as location_usecases
 from market.application import usecases
 from middleware import Chartset
+from notification.application import usecases as notification_usecases
 from shopping.application import usecases as shopping_usecases
 
 
@@ -26,6 +27,7 @@ def setup() -> FastAPI:
             profile_usecases,
             location_usecases,
             shopping_usecases,
+            notification_usecases,
         ]
     )
     app = FastAPI()

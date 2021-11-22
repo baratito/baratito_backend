@@ -6,6 +6,7 @@ from auth.di import containers as auth_containers
 from common.persistence import get_db_session
 from location.di import containers as location_containers
 from market.di import containers as market_containers
+from notification.di import containers as notification_containers
 from shopping.di import containers as shopping_containers
 
 
@@ -42,4 +43,9 @@ class ApplicationContainer(containers.DeclarativeContainer):
 
     purchase_list_repository_container = providers.Container(
         shopping_containers.PurchaseListContainer, db_session=db_session_container.provided.session
+    )
+
+    notification_repository_container = providers.Container(
+        notification_containers.NotificationContainer,
+        db_session=db_session_container.provided.session,
     )

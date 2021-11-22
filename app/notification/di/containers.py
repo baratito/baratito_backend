@@ -1,6 +1,8 @@
 from dependency_injector import containers, providers
 
+from notification.persistence.notification_repostory_impl import NotificationRepositoryImpl
 
-class Container(containers.DeclarativeContainer):
+
+class NotificationContainer(containers.DeclarativeContainer):
     db_session = providers.Dependency()
-    product_respository = providers.Factory(..., db_session=db_session)
+    notification_respository = providers.Factory(NotificationRepositoryImpl, db_session=db_session)

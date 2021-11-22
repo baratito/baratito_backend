@@ -1,9 +1,8 @@
 import datetime
-from typing import Text
 
 from sqlalchemy import BIGINT, Column, DateTime, Float, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import backref, relationship
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import Boolean
 
@@ -31,8 +30,8 @@ class ListItem(Base):
     product_id = Column(BIGINT, ForeignKey("product.id"))
     product = relationship("Product", backref="list_items")
 
-    list_id = Column(BIGINT, ForeignKey("list.id"))
-    list_obj = relationship("List", backref="list_items")
+    list_id = Column(BIGINT, ForeignKey("list.id", ondelete="cascade"))
+    list_obj = relationship("List", backref=backref("list_items", cascade="all,delete"))
 
 
 class PurchaseList(Base):

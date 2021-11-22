@@ -7,6 +7,7 @@ from auth.presentation import routes as auth_routes
 from auth.presentation.utils import get_current_user
 from location.presentation import routes as location_routes
 from market.presentation import routes as products_routes
+from notification.presentation import routes as notification_routes
 from shopping.presentation import routes as shopping_routes
 
 
@@ -19,4 +20,5 @@ def get_routes():
     router.include_router(profile_routes.router, tags=["profile"])
     router.include_router(location_routes.router, tags=["location"])
     router.include_router(shopping_routes.router, tags=["shopping"])
+    router.include_router(notification_routes.router, tags=["notification"])
     return router
