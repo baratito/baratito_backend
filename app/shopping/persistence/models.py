@@ -48,8 +48,8 @@ class PurchaseList(Base):
     spent = Column(Float)
     overview_polyline = Column(String)
 
-    list_id = Column(BIGINT, ForeignKey("list.id"))
-    list_obj = relationship("List", backref="purchase_lists")
+    list_id = Column(BIGINT, ForeignKey("list.id", ondelete="SET NULL"))
+    list_obj = relationship("List", backref=backref("purchase_lists"))
 
     user_id = Column(BIGINT, ForeignKey("user.id"))
     user = relationship("User", backref="purchase_lists")
@@ -73,8 +73,8 @@ class PurchaseListItem(Base):
     product_id = Column(BIGINT, ForeignKey("product.id"))
     product = relationship("Product", backref="purchase_list_items")
 
-    purchase_list_id = Column(BIGINT, ForeignKey("purchase_list.id"))
-    purchase_list = relationship("PurchaseList", backref="purchase_list_items")
+    purchase_list_id = Column(BIGINT, ForeignKey("purchase_list.id", ondelete="SET NULL"))
+    purchase_list = relationship("PurchaseList", backref=backref("purchase_list_items"))
 
     establishment_id = Column(BIGINT, ForeignKey("establishment.id"))
     establishment = relationship("Establishment", backref="purchase_list_items")
@@ -87,7 +87,9 @@ class EstablishmentPurchaseListOrder(Base):
     order = Column(Integer)
 
     purchase_list_id = Column(BIGINT, ForeignKey("purchase_list.id"))
-    purchase_list = relationship("PurchaseList", backref="establishment_orders")
+    purchase_list = relationship(
+        "PurchaseList", backref=backref("establishment_orders", cascade="all,delete")
+    )
 
     establishment_id = Column(BIGINT, ForeignKey("establishment.id"))
     establishment = relationship("Establishment", backref="establishment_orders")
