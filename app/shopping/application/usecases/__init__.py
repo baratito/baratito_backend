@@ -8,6 +8,7 @@ from .detail_purchase_list import detail_purchase_list
 from .edit_list import edit_list
 from .edit_purchase_list_item import edit_purchase_list_item
 from .get_best_route import get_best_route_info
+from .get_recommendation_products import get_recommendation_products
 from .list_items import list_items
 from .list_lists import list_lists
 from .list_purchase_lists import list_purchase_lists

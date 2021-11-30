@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 
-from market.domain.establishment import Establishment
+from market.domain import Establishment
+from market.domain import Product as ProductDomain
+from market.persistence.models import Product
 from shopping.application.repositories.purchase_list_repository import PurchaseListRepository
 from shopping.domain.purchase_list import PurchaseList as PurchaseListDomain
 from shopping.domain.purchase_list_item import PurchaseListItem as PurchaseListItemDomain
@@ -77,6 +79,16 @@ class PurchaseListRepositoryImpl(PurchaseListRepository):
         )
 
         return establishment
+
+    def _to_domain_product(self, product):
+        product = ProductDomain(
+            id=product.id,
+            name=product.name,
+            presentation=product.presentation,
+            brand=product.brand,
+            photo=product.photo,
+        )
+        return product
 
     def create(self, purchase_list: PurchaseListDomain):
         with self.db_session() as session:
@@ -203,3 +215,18 @@ class PurchaseListRepositoryImpl(PurchaseListRepository):
             session.query(PurchaseListItem).filter_by(id=item_id).update(update_fields)
             session.commit()
         return self.get_purchase_item_by_id(item_id)
+
+    def get_all_products(self, user_id):
+        with self.db_session() as session:
+            query = (
+                session.query(Product)
+                .join(PurchaseListItem)
+                .join(PurchaseList)
+                .filter(PurchaseList.user_id == user_id)
+            ).distinct()
+
+            items = []
+            for item in query.all():
+                items.append(self._to_domain_product(item))
+
+        return items

@@ -88,10 +88,10 @@ def get_categories():
 
 @router.get("/products/recommendations", name="market:establishments")
 @router.get("/products/recommendations/", name="market:establishments", include_in_schema=False)
-def recommendations():
+def recommendations(user=Depends(get_current_user)):
     """
     Get list of establishments
     """
 
-    products = get_recommendations()
+    products = get_recommendations(user_id=user.id)
     return {"results": products}
