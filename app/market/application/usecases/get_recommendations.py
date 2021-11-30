@@ -5,7 +5,7 @@ from dependency_injector.wiring import Provide, inject
 
 from common.di.containers import ApplicationContainer
 from market.application.repositories import ProductRepository
-from market.domain import Product, product
+from market.domain import Product
 
 
 @inject

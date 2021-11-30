@@ -48,6 +48,14 @@ class PurchaseList(Base):
     spent = Column(Float)
     overview_polyline = Column(String)
 
+    latitude_southwest = Column(Float)
+    longitude_southwest = Column(Float)
+    latitude_northeast = Column(Float)
+    longitude_northeast = Column(Float)
+
+    start_longitude = Column(Float)
+    start_latitude = Column(Float)
+
     list_id = Column(BIGINT, ForeignKey("list.id", ondelete="SET NULL"))
     list_obj = relationship("List", backref=backref("purchase_lists"))
 

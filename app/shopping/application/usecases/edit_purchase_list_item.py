@@ -12,7 +12,6 @@ def edit_purchase_list_item(
     item_id: int = None,
     data=None,
 ):
-    print(item_id)
     item = purchase_list_repository.update_purchase_list_item(item_id=item_id, data=data)
 
     return item

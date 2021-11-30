@@ -18,4 +18,7 @@ class Notification(Base):
     user_id = Column(BIGINT, ForeignKey("user.id"))
     user = relationship("User", backref="notifications")
 
+    product_id = Column(BIGINT, ForeignKey("product.id"))
+    product = relationship("Product", backref="notifications")
+
     created_date = Column(DateTime, default=datetime.datetime.utcnow)

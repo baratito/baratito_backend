@@ -8,7 +8,7 @@ from common.settings import DB_URL
 
 class Database:
     def __init__(self) -> None:
-        self._engine = create_engine(DB_URL)
+        self._engine = create_engine(DB_URL, echo=False)
         self._session_factory = orm.scoped_session(
             orm.sessionmaker(
                 autocommit=False,

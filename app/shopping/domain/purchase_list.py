@@ -1,4 +1,5 @@
 from enum import IntEnum
+from typing import Dict
 from typing import List as Tylist
 from typing import Optional
 
@@ -27,3 +28,5 @@ class PurchaseList(BaseModel):
     establishments: Optional[Tylist[PurchaseItemEstablishment]] = []
     created_date: Optional[str]
     overview_polyline: Optional[str]
+    boundaries: Optional[Dict]
+    starting_point: Optional[Dict]

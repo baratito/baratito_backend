@@ -25,6 +25,7 @@ from shopping.application.usecases import (
 )
 from shopping.application.usecases.complete_purchase_list import complete_purchase_list
 from shopping.application.usecases.list_purchase_lists import list_purchase_lists
+from shopping.application.usecases.purchase_list_summary import purchase_list_summary
 from shopping.domain import EstablishmentProduct, ListEstablishmentProduct, PurchaseList
 
 from .schemas import BuySetting, ListCreate, ListEdit, ListItemCreate, PurchaseListItemEdit
@@ -192,7 +193,7 @@ def get_one_best_establishment(markets_with_items):
 
 def create_purchase_list_wrapper(location, candidate, setting, list_obj, user):
     origin = (location.latitude, location.longitude)
-    distance, duration, overview_polyline = get_best_route_info(
+    distance, duration, overview_polyline, bounds = get_best_route_info(
         origin=origin, establishments=candidate.establishments, mode=setting.mode
     )
 
@@ -206,6 +207,11 @@ def create_purchase_list_wrapper(location, candidate, setting, list_obj, user):
         list_id=list_obj.id,
         estimated_price=candidate.total(),
         overview_polyline=overview_polyline,
+        boundaries=bounds,
+        starting_point={
+            "latitude": origin[0],
+            "longitude": origin[1],
+        },
     )
 
     purchase_list = create_purchase_list(purchase_list_obj=purchase_list, extra_data=candidate)
@@ -225,7 +231,7 @@ def buy_list(user=Depends(get_current_user), list_id: int = None, setting: BuySe
     )
 
     if len(markets) == 0:
-        raise HTTPException(status_code=400, detail="No markets near")
+        raise HTTPException(status_code=400, detail="Lo sentimos, no hay supermercados cerca tuyo")
 
     items = list_items(list_id=list_id)
     item_ids = [item.product.id for item in items]
@@ -249,7 +255,10 @@ def buy_list(user=Depends(get_current_user), list_id: int = None, setting: BuySe
 
     list_obj = detail_list(list_id=list_id)
 
-    if len(markets) == 1 or setting.max_market_count == 1:
+    if len(markets_with_items) == 0:
+        raise HTTPException(status_code=400, detail="Lo sentimos, no hay supermercados cerca tuyo")
+
+    if len(markets) == 1 or setting.max_market_count == 1 and len(markets) > 0:
         candidate = get_one_best_establishment(markets_with_items)
 
         result = create_purchase_list_wrapper(
@@ -270,6 +279,7 @@ def buy_list(user=Depends(get_current_user), list_id: int = None, setting: BuySe
     result = create_purchase_list_wrapper(
         location=location, candidate=candidate, setting=setting, list_obj=list_obj, user=user
     )
+
     return result
 
 
@@ -332,3 +342,10 @@ def patch_purchase_list_item(
     purchase = edit_purchase_list_item(item_id=id, data=data)
 
     return purchase
+
+
+@router.get("/purchase_summary", name="shopping:summary")
+@router.get("/purchase_summary/", name="shopping:summary", include_in_schema=False)
+def summary_view(user=Depends(get_current_user)):
+    purchases = purchase_list_summary(user_id=user.id)
+    return {"results": purchases}

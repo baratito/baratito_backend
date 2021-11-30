@@ -1,5 +1,9 @@
+from typing import Optional
+
 from pydantic import BaseModel
 from pydantic.fields import Field
+
+from market.domain import Product
 
 
 class Notification(BaseModel):
@@ -9,3 +13,4 @@ class Notification(BaseModel):
     is_read: bool
     created_date: str
     user_id: int
+    product: Optional[Product]

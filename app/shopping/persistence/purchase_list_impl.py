@@ -31,6 +31,20 @@ class PurchaseListRepositoryImpl(PurchaseListRepository):
             estimated_price=list_db.estimated_price,
             created_date=str(list_db.created_date),
             overview_polyline=list_db.overview_polyline,
+            boundaries={
+                "northeast": {
+                    "latitude": list_db.latitude_northeast,
+                    "longitude": list_db.longitude_northeast,
+                },
+                "southwest": {
+                    "latitude": list_db.latitude_southwest,
+                    "longitude": list_db.longitude_southwest,
+                },
+            },
+            starting_point={
+                "latitude": list_db.start_latitude,
+                "longitude": list_db.start_longitude,
+            },
         )
         return purchase
 
@@ -77,10 +91,16 @@ class PurchaseListRepositoryImpl(PurchaseListRepository):
                 estimated_price=purchase_list.estimated_price,
                 status=bool(purchase_list.status),
                 overview_polyline=purchase_list.overview_polyline,
+                latitude_southwest=purchase_list.boundaries["southwest"]["latitude"],
+                longitude_southwest=purchase_list.boundaries["southwest"]["longitude"],
+                latitude_northeast=purchase_list.boundaries["northeast"]["latitude"],
+                longitude_northeast=purchase_list.boundaries["northeast"]["longitude"],
+                start_latitude=purchase_list.starting_point["latitude"],
+                start_longitude=purchase_list.starting_point["longitude"],
             )
             session.add(list_db)
             session.commit()
-        list_obj = self._to_domain(list_db=list_db)
+            list_obj = self._to_domain(list_db=list_db)
         return list_obj
 
     def create_purchase_list(self, purchase_list_item: PurchaseListItemDomain):
@@ -98,16 +118,21 @@ class PurchaseListRepositoryImpl(PurchaseListRepository):
             session.add(item_db)
             session.commit()
 
-        item = self._to_domain_item(item_db=item_db)
+            item = self._to_domain_item(item_db=item_db)
 
         return item
 
-    def list(self, user_id, in_progress: int = None):
+    def list(self, user_id, in_progress: int = None, from_date=None):
         with self.db_session() as session:
             query = session.query(PurchaseList).filter_by(user_id=user_id)
 
             if in_progress is not None:
                 query = query.filter_by(status=not bool(in_progress))
+
+            if from_date is not None:
+                query = query.filter(PurchaseList.created_date >= from_date).order_by(
+                    PurchaseList.created_date.asc()
+                )
 
             purchases = []
 

@@ -17,7 +17,20 @@ def get_best_route_info(origin, establishments, mode: str = "driving"):
     else:
         direction_result = gmaps.directions(origin=origin, destination=points[0])
 
+    bounds = direction_result[0]["bounds"]
+
+    bounderies = {
+        "northeast": {
+            "latitude": bounds["northeast"]["lat"],
+            "longitude": bounds["northeast"]["lng"],
+        },
+        "southwest": {
+            "latitude": bounds["southwest"]["lat"],
+            "longitude": bounds["southwest"]["lng"],
+        },
+    }
+
     overview_polyline = direction_result[0]["overview_polyline"]["points"]
     distance = sum([leg["distance"]["value"] for leg in direction_result[0]["legs"]])
     duration = sum([leg["duration"]["value"] for leg in direction_result[0]["legs"]])
-    return distance, duration, overview_polyline
+    return distance, duration, overview_polyline, bounderies
