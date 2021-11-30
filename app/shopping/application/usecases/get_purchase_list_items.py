@@ -1,22 +1,27 @@
 from dependency_injector.wiring import Provide, inject
 
 from common.di.containers import ApplicationContainer
-from market.domain import establishment
 from shopping.application.repositories.purchase_list_repository import PurchaseListRepository
-from shopping.application.usecases.get_purchase_list_items import get_purchase_list_items
 from shopping.domain.purchase_item_establishment import PurchaseItemEstablishment
 
 
 @inject
-def detail_purchase_list(
+def get_purchase_list_items(
     purchase_list_repository: PurchaseListRepository = Provide[
         ApplicationContainer.purchase_list_repository_container.purchase_list_respository
     ],
     purchase_id: int = None,
 ):
-    purchase = purchase_list_repository.get_by_id(id=purchase_id)
+    result = []
 
-    items = get_purchase_list_items(purchase_id=purchase_id)
-    purchase.establishments = items
+    orders = purchase_list_repository.get_establishment_order(purchase_id=purchase_id)
 
-    return purchase
+    for order in orders:
+        items = purchase_list_repository.get_items_by_purchase_id(purchase_id=purchase_id)
+        purchase_item_establishment = PurchaseItemEstablishment(
+            establishment=order, purchase_items=items
+        )
+
+        result.append(purchase_item_establishment)
+
+    return result
